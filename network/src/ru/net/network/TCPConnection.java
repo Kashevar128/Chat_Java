@@ -3,6 +3,8 @@ package ru.net.network;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class TCPConnection {
 
@@ -18,8 +20,8 @@ public class TCPConnection {
 
     public TCPConnection(Socket socket, ListenerNetwork listener) throws IOException {
         this.socket = socket;
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
         this.listener = listener;
         rxThread = new Thread(new Runnable() {
             @Override
