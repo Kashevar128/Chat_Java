@@ -7,15 +7,16 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class TCPConnection {
+    private String name;
+    final private Socket socket;
+    final private BufferedReader in;
+    final private BufferedWriter out;
+    final private Thread rxThread;
+    final private ListenerNetwork listener;
 
-    Socket socket;
-    BufferedReader in;
-    BufferedWriter out;
-    Thread rxThread;
-    ListenerNetwork listener;
-
-    public TCPConnection(ListenerNetwork listener, InetAddress address, int port) throws IOException {
+    public TCPConnection(ListenerNetwork listener, String address, int port, String name) throws IOException {
         this(new Socket(address, port), listener);
+        this.name = name;
     }
 
     public TCPConnection(Socket socket, ListenerNetwork listener) throws IOException {
@@ -44,7 +45,7 @@ public class TCPConnection {
     }
 
 
-    public void sendMessage(String msg) {
+    public synchronized void sendMessage(String msg) {
         try {
             out.write(msg + "\r\n");
             out.flush();
@@ -54,13 +55,17 @@ public class TCPConnection {
         }
     }
 
-    public void disconnect() {
+    public synchronized void disconnect() {
         try {
             rxThread.interrupt();
             socket.close();
         } catch (IOException e) {
             listener.connectionTerminated(TCPConnection.this);
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
