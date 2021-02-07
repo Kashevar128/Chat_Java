@@ -5,21 +5,32 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TCPConnection {
-    private String name;
+
     final private Socket socket;
     final private BufferedReader in;
     final private BufferedWriter out;
     final private Thread rxThread;
     final private ListenerNetwork listener;
+    private String name;
 
-    public TCPConnection(ListenerNetwork listener, String address, int port, String name) throws IOException {
-        this(new Socket(address, port), listener);
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public TCPConnection(Socket socket, ListenerNetwork listener) throws IOException {
+    public TCPConnection(ListenerNetwork listener, String address, int port) throws IOException {
+        this( listener, new Socket(address, port));
+        this.name = "";
+    }
+
+    public TCPConnection(ListenerNetwork listener, Socket socket) throws IOException {
         this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
@@ -27,7 +38,6 @@ public class TCPConnection {
         rxThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                listener.connectionIsReady(TCPConnection.this);
                 try {
                     while (!rxThread.isInterrupted()) {
                         listener.receivingMessage(TCPConnection.this, in.readLine());
@@ -36,7 +46,7 @@ public class TCPConnection {
                     listener.exception(TCPConnection.this, e);
                 } finally {
                     System.out.println("Соединение разорвано.");
-                    disconnect();
+                    disconnect(name);
                 }
 
             }
@@ -44,32 +54,31 @@ public class TCPConnection {
         rxThread.start();
     }
 
-
     public synchronized void sendMessage(String msg) {
         try {
             out.write(msg + "\r\n");
             out.flush();
         } catch (IOException e) {
             listener.exception(TCPConnection.this, e);
-            disconnect();
+            disconnect(name);
         }
     }
 
-    public synchronized void disconnect() {
+    public synchronized void disconnect(String nick) {
         try {
             rxThread.interrupt();
             socket.close();
         } catch (IOException e) {
-            listener.connectionTerminated(TCPConnection.this);
+            e.printStackTrace();
         }
-    }
-
-    public String getName() {
-        return name;
+        finally {
+            listener.connectionTerminated(TCPConnection.this, nick);
+        }
     }
 
     @Override
     public String toString() {
         return "TCPconnection: " + socket.getInetAddress() + ": " + socket.getPort();
     }
+
 }

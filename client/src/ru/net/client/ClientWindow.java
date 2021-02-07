@@ -8,80 +8,54 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.EventListener;
 
 public class ClientWindow extends JFrame implements ActionListener, ListenerNetwork {
-
+    TCPConnection connection = null;
+    private boolean authorized = false;
     private static final String IP = "192.168.0.104";
     private static final int PORT = 8189;
-    private static final int WIDHT = 600;
-    private static final int HEIGHT = 400;
-    private static final String NAME = "Slava";
+    final int WIDTH = 400;
+    final int HEITH = 200;
+    final JTextArea log = new JTextArea();
+    final JTextField fieldNickname = new JTextField();
+    final JTextField fieldInput = new JTextField();
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ClientWindow();
-            }
-        });
+    public boolean isAuthorized() {
+        return authorized;
+    }
+    public void setAuthorized(boolean authorized) {
+        this.authorized = authorized;
     }
 
-    private final JTextArea log = new JTextArea();
-    private final JTextField fieldNickname = new JTextField(NAME);
-    private final JTextField fieldInput = new JTextField();
+    public TCPConnection getConnection() {
+        return connection;
+    }
 
-    private TCPConnection connection;
-
-    private ClientWindow() {
+    ClientWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(WIDHT, HEIGHT);
+        setSize(WIDTH, HEITH);
         setLocationRelativeTo(null);
         setAlwaysOnTop(true);
         log.setEditable(false);
         log.setLineWrap(true);
-        add(log, BorderLayout.CENTER);
         fieldInput.addActionListener(this);
-        add(fieldInput, BorderLayout.SOUTH);
+        fieldNickname.setEditable(false);
         add(fieldNickname, BorderLayout.NORTH);
+        add(log, BorderLayout.CENTER);
+        add(fieldInput, BorderLayout.SOUTH);
+        setResizable(false);
 
-        setVisible(true);
+        setVisible(false);
+
         try {
-            connection = new TCPConnection(this, IP, PORT, NAME);
+            connection = new TCPConnection(this, IP, PORT);
         } catch (IOException e) {
-            printMsg("TCPConnection exeption: " + e);
+            e.printStackTrace();
         }
+
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String msg = fieldInput.getText();
-        if(msg.equals("")) return;
-        fieldInput.setText(null);
-        connection.sendMessage(fieldNickname.getText() + ": " + msg);
-    }
-
-    @Override
-    public void connectionIsReady(TCPConnection tcpConnection) {
-        printMsg("Connection ready...");
-    }
-
-    @Override
-    public void connectionTerminated(TCPConnection tcpConnection) {
-        printMsg("Connection close.");
-    }
-
-    @Override
-    public void receivingMessage(TCPConnection tcpConnection, String msg) {
-        printMsg(msg);
-    }
-
-    @Override
-    public void exception(TCPConnection tcpConnection, IOException e) {
-        System.out.println("TCPConnection exeption: " + e);
-    }
-
-    private synchronized void printMsg(String msg) {
+    public synchronized void printMsg(String msg) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -90,4 +64,50 @@ public class ClientWindow extends JFrame implements ActionListener, ListenerNetw
             }
         });
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        send();
+    }
+
+    public void send() {
+        String msg = fieldInput.getText();
+        if (msg.equals("")) return;
+        fieldInput.setText(null);
+        connection.sendMessage(fieldNickname.getText() + ": " + msg);
+
+    }
+
+    @Override
+    public void connectionIsReady(TCPConnection tcpConnection, String name) {
+        printMsg("Соединение установлено...");
+    }
+
+    @Override
+    public void connectionTerminated(TCPConnection tcpConnection, String name) {
+        printMsg("Соединение закрыто.");
+    }
+
+    @Override
+    public void receivingMessage(TCPConnection tcpConnection, String msg) {
+        authentication(tcpConnection, msg);
+        printMsg(msg);
+    }
+    @Override
+    public void exception(TCPConnection tcpConnection, IOException e) {
+        System.out.println("TCPConnection exeption: " + e);
+    }
+
+    @Override
+    public void authentication(TCPConnection tcpConnection, String msg) {
+        if (msg.startsWith("/authok")) {
+            String[] parts = msg.split("\\s");
+            String nick = parts[1];
+            fieldNickname.setText(nick);
+            setAuthorized(true);
+            setVisible(true);
+        }
+    }
 }
+
+
