@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class ClientWindow extends JFrame implements ActionListener, TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "172.22.34.61";// 192.168.0.104 - доп. IP // Переменная c IP машины
+    private static final String IP_ADDR = "192.168.0.104";//172.22.34.61 - доп. IP // Переменная c IP машины
     private static final int PORT = 8189; // Переменная с портом
     private static final int WIDTH = 600; // Переменная с шириной окна
     private static final int HEIGHT = 400; // Переменная с высотой окна
@@ -39,8 +39,8 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
        add(textArea, BorderLayout.CENTER); // Добавляем диалоговое поле на окно клиента (с типом размещения BorderLayout) по центру
        add(fieldInput, BorderLayout.SOUTH); // Добавляем поле ввода сообщений на юг окна клиента
        add(fieldNickname, BorderLayout.NORTH); // Добавляем поле никнейма на север окна клиента
-
        setVisible(true); //Пишем - показать окно
+
         try { // Блок для обхода исключений
             connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
         } catch (IOException e) {
@@ -51,13 +51,13 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
     @Override
     public void actionPerformed(ActionEvent e) { // Переопределнный метод, реагирующий на событие - нажатие enter
         String msg = fieldInput.getText(); // Записываем в переменную текст из поля ввода сообщения
-        if(msg.equals("")) return; // Если переменная равна пустому месту, делаем возврам из метода
+        if(msg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         connection.sendMessage(fieldNickname.getText() + ": " + msg); // отправляем его с помощью метода TCPConnection
     }
 
     @Override
-    public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, мтеоды синхронизировать не надо, т.к. с ними работаем только сам клиент
+    public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         printMsg("Connection ready...");
     }
 
