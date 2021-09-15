@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class ClientWindow extends JFrame implements ActionListener, TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "192.168.0.104"; // Переменная c IP машины
+    private static final String IP_ADDR = "172.22.34.61";// 192.168.0.104 - доп. IP // Переменная c IP машины
     private static final int PORT = 8189; // Переменная с портом
     private static final int WIDTH = 600; // Переменная с шириной окна
     private static final int HEIGHT = 400; // Переменная с высотой окна
@@ -79,7 +79,7 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
     private synchronized void printMsg(String msg) {                            // Метод для выведения сообщения в поле диалога
         SwingUtilities.invokeLater(() -> {                                      // В отдельном потоке, т.к. так как есть возможность одновременного обращения к методу из нескольких мест в программе
             textArea.append(msg + "\n");                                        // Добавление сообщения
-            textArea.setCaretPosition(textArea.getDocument().getLength());
+            textArea.setCaretPosition(textArea.getDocument().getLength());      // Переведение каретки в конец строки после сообщения, чтобы иметь пустую строку между сообщениями.
         });
     }
 }
