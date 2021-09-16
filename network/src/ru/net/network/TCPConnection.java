@@ -42,7 +42,7 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
             out.write(value + "\r\n"); // Пишем в поток, \r - перевод каретки на начало строки для корректной работы с программой Putty, \n - перенос каретки на следующую строку
             out.flush(); // Сбрасываем написанное в буфере в поток, если вдруг сообщение застряло в буфере и не передалось по сети
         } catch (IOException e) {
-            eventListener.onException(TCPConnection.this, e); // Вызываем событие - выброс исключения, передаем на вход экземпляр сообщения и экземпляр исключения
+            e.printStackTrace();
             disconnect(); // Раз появилось исключение, то что-то работаем не так, в связи с этим применяем метод disconnect
         }
     }
@@ -52,8 +52,8 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
         try {
             socket.close(); // После прерывания закрываем сокет
         } catch (IOException e) {
-            eventListener.onException(TCPConnection.this, e); // Может возникнуть, если экземпляр сокета будет null, то есть закрывать нечего,
-        }                                                     // в этом случае вызываем событие - выброс исключения
+            e.printStackTrace();
+        }
     }
 
     @Override

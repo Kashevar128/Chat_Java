@@ -20,10 +20,10 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int WIDTH = 600; // Переменная с шириной окна
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
-    private TCPConnection connection; // Переменная для новых TCP - соединений
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Server"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
+    private TCPConnection connection;
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -40,12 +40,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         setVisible(true); //Пишем - показать окно
 
         printMsg("Server running..."); // Консоль - запуск сервера
+        printMsg("You have to wait connection");
         try (ServerSocket serverSocket = new ServerSocket(8189)) { // Создание сервер - сокета на порте 8189, слушающего клиента в try с ресурсами
             while (true) {
-                connection = new TCPConnection(serverSocket.accept(), this); // В переменную connection закидываем инстанс
+                new TCPConnection(serverSocket.accept(), this); // В переменную connection закидываем инстанс
             }
         } catch (IOException e) {
-            this.onException(connection, e);
+            printMsg("Client kicked");
         }
 
     }
