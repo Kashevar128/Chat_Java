@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.net.client.gui.ClientWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.net.client.gui.ClientGuiController">
    <left>
        <HBox prefHeight="702.0" prefWidth="373.0" BorderPane.alignment="CENTER">
            <VBox alignment="CENTER" prefHeight="702.0" prefWidth="81.0" styleClass="dark-gray-background" stylesheets="@values/style.css">
@@ -324,12 +324,12 @@
                    </HBox.margin>
                    <Image url="@img/attach_50px.png" />
                </ImageView>
-               <TextField fx:id="input" onAction="#send" prefHeight="66.0" prefWidth="416.0" promptText="Enter to message..." styleClass="ring-color" stylesheets="@values/style.css">
+               <TextField fx:id="input" onAction="#msgProcessing" prefHeight="66.0" prefWidth="416.0" promptText="Enter to message..." styleClass="ring-color" stylesheets="@values/style.css">
                    <font>
                        <Font size="20.0" />
                    </font>
                </TextField>
-            <Button mnemonicParsing="false" onAction="#send" prefHeight="56.0" prefWidth="69.0" styleClass="ring-color" stylesheets="@values/style.css">
+            <Button mnemonicParsing="false" onAction="#msgProcessing" prefHeight="56.0" prefWidth="69.0" styleClass="ring-color" stylesheets="@values/style.css">
                <graphic>
                      <ImageView fitHeight="47.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true">
                          <Image url="@img/paper_plane_48px.png" />

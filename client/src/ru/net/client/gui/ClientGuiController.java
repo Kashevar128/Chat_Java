@@ -1,6 +1,6 @@
 package ru.net.client.gui;
 
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListView;
@@ -8,24 +8,31 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import ru.net.client.Client;
 
-public class ClientWindowController {
+public class ClientGuiController {
     @FXML
     public ListView<HBox> output;
     @FXML
     public TextField input;
 
-    public void send() {
-        if (!filter(input.getText())) {
+    private Client client;
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void msgProcessing() {
+        String msg = input.getText();
+        if (!filter(msg)) {
             input.clear();
             return;
         }
-        addToChat(input.getText());
-        input.clear();
-    }
-
-    public void printFX(String msg) {
-        addToChat(msg);
+        getClient().send(msg);
     }
 
     private static boolean filter (String msg) {
@@ -37,7 +44,7 @@ public class ClientWindowController {
         return flag;
     }
 
-    private void addToChat(String msg) {
+    public void print(String msg) {
         LabelChat labelChat = new LabelChat(msg);
         Image image = new Image(String.valueOf(getClass().getClassLoader().getResource("img/544_oooo.plus.png")));
         ImageView profileImage = new ImageView(image);
@@ -47,9 +54,7 @@ public class ClientWindowController {
         hBox.getChildren().addAll(profileImage, labelChat);
         HBox.setMargin(profileImage, new Insets(10, 10, 10, 10));
         HBox.setMargin(labelChat, new Insets(20, 10, 20, 10));
-        output.getItems().add(hBox);
-        int index = output.getSelectionModel().getSelectedIndex();
-        output.getSelectionModel().clearSelection(index);
+        Platform.runLater(() -> output.getItems().add(hBox));
     }
 
 }

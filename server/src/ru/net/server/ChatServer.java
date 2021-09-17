@@ -21,7 +21,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
-    private final JTextField fieldNickname = new JTextField("Server"); // Поле с ником пользователя
+    private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
     private TCPConnection connection;
 
@@ -43,7 +43,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         printMsg("You have to wait connection");
         try (ServerSocket serverSocket = new ServerSocket(8189)) { // Создание сервер - сокета на порте 8189, слушающего клиента в try с ресурсами
             while (true) {
-                new TCPConnection(serverSocket.accept(), this); // В переменную connection закидываем инстанс
+                connection = new TCPConnection(serverSocket.accept(), this); // В переменную connection закидываем инстанс
             }
         } catch (IOException e) {
             printMsg("Client kicked");
@@ -92,6 +92,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         String msg = fieldInput.getText(); // Записываем в переменную текст из поля ввода сообщения
         if(msg.equals("")) return; // Если переменная равна пустому месту, делаем возврам из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
+        printMsg(msg);
         connection.sendMessage(fieldNickname.getText() + ": " + msg); // отправляем его с помощью метода TCPConnection
     }
 }

@@ -60,4 +60,5 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
     public String toString() { // Переопределение метода для вывода нужной информации
         return "TCPConnection: " + socket.getInetAddress() + ": " + socket.getPort(); // Вывод в консоль адреса машины сервера и порта, который он занял
     }
+
 }

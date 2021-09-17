@@ -15,5 +15,4 @@ public class LabelChat extends Label {
         this.setMaxWidth(450);
         this.setWrapText(true);
     }
-
 }
