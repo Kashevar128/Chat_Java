@@ -1,5 +1,6 @@
 package ru.net.server;
 
+import ru.net.network.Message;
 import ru.net.network.TCPConnection;
 import ru.net.network.TCPConnectionListener;
 
@@ -24,6 +25,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
     private TCPConnection connection;
+    private static final String NAME_SERVER = "Admin";
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -36,6 +38,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         add(textArea, BorderLayout.CENTER); // Добавляем диалоговое поле на окно клиента (с типом размещения BorderLayout) по центру
         add(fieldInput, BorderLayout.SOUTH); // Добавляем поле ввода сообщений на юг окна клиента
         add(fieldNickname, BorderLayout.NORTH); // Добавляем поле никнейма на север окна клиента
+        setResizable(false);
 
         setVisible(true); //Пишем - показать окно
 
@@ -51,10 +54,9 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     }
 
-    private void sendToAllConnections(String value) { // Метод для рассылки сообщений всем соединениям сразу
-        printMsg(value);
+    private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) { // Проходимся переменной по всей коллекции
-            tcpConnection.sendMessage(value); // Вызываем для каждого метод отправки сообщения класса TCPConnection
+            tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
         }
     }
 
@@ -68,31 +70,33 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     @Override
     public synchronized void onConnectionReady(TCPConnection tcpConnection) { //Синхронизируем все методы tcpConnection, т.к. одними и теми же методами могут пользоваться несколько потоков
         connections.add(tcpConnection); // Добавляем в коллекцию соединений новое соединение
-        sendToAllConnections("Client connected: " + tcpConnection); // Делаем рассылку все подключенным пользователям о создании нового соединения с клиентом
+        printMsg("Client connected: " + tcpConnection); // Делаем рассылку все подключенным пользователям о создании нового соединения с клиентом
     }
 
     @Override
-    public synchronized void onReceiveString(TCPConnection tcpConnection, String value) {
-        sendToAllConnections(value); //Метод рассылки всем пользователям
+    public synchronized void onReceiveString(TCPConnection tcpConnection, Message msg) {
+        sendToAllConnections(msg);
+        printMsg(msg.getStringValue());
     }
 
     @Override
     public synchronized void onDisconnect(TCPConnection tcpConnection) {
-        connections.remove(tcpConnection); // Удаление соедиения из коллекции соединений
-        sendToAllConnections("Client disconnected: " + tcpConnection); // Разослать всем клиентам весть об утраченном соединении
+        connections.remove(tcpConnection); // Удаление соединения из коллекции соединений
+        printMsg("Client disconnected: " + tcpConnection);
     }
 
     @Override
     public synchronized void onException(TCPConnection tcpConnection, Exception e) {
-        System.out.println("TCPConnection exception: " + e); // Исключение для соединения
+        printMsg("TCPConnection exception: " + e); // Исключение для соединения
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String msg = fieldInput.getText(); // Записываем в переменную текст из поля ввода сообщения
-        if(msg.equals("")) return; // Если переменная равна пустому месту, делаем возврам из метода
+        String stringMsg = fieldInput.getText(); // Записываем в переменную текст из поля ввода сообщения
+        if(stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
-        printMsg(msg);
-        connection.sendMessage(fieldNickname.getText() + ": " + msg); // отправляем его с помощью метода TCPConnection
+        printMsg(stringMsg);
+        Message msg = new Message(NAME_SERVER + ":" + stringMsg, NAME_SERVER);
+        sendToAllConnections(msg); // Рассылка сообщений клиентам
     }
 }

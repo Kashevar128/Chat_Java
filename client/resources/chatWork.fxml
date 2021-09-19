@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.net.client.gui.ClientGuiController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.net.client.gui.ClientGuiController">
    <left>
        <HBox prefHeight="702.0" prefWidth="373.0" BorderPane.alignment="CENTER">
            <VBox alignment="CENTER" prefHeight="702.0" prefWidth="81.0" styleClass="dark-gray-background" stylesheets="@values/style.css">
@@ -55,7 +55,7 @@
                        </HBox.margin>
                        <Image url="@img/search_104498.png" />
                    </ImageView>
-                   <TextField prefHeight="25.0" prefWidth="174.0" styleClass="transparent-background">
+                   <TextField fx:id="search" prefHeight="25.0" prefWidth="174.0" styleClass="transparent-background">
                        <HBox.margin>
                            <Insets left="10.0" right="20.0" />
                        </HBox.margin>
@@ -286,7 +286,7 @@
    </left>
    <center>
        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-           <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="626.0">
+           <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="635.0">
                <Label prefHeight="28.0" prefWidth="96.0" text="Human" textFill="#000000b2">
                    <font>
                        <Font name="Lucida Sans Demibold Italic" size="24.0" />
@@ -308,34 +308,39 @@
                        <Insets left="5.0" />
                    </HBox.margin>
                </Label>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
            </HBox>
-         <ListView fx:id="output" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="528.0" prefWidth="578.0" styleClass="ring-color" stylesheets="@values/style.css" />
-           <HBox alignment="CENTER_LEFT" prefHeight="94.0" prefWidth="629.0">
-               <ImageView fitHeight="55.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                   <HBox.margin>
-                       <Insets left="10.0" right="30.0" />
-                   </HBox.margin>
-                   <Image url="@img/comedy_48px.png" />
-               </ImageView>
+         <ListView fx:id="output" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="594.0" prefWidth="629.0" styleClass="ring-color" stylesheets="@values/style.css" />
+           <HBox alignment="CENTER_LEFT" prefHeight="86.0" prefWidth="629.0">
                <ImageView fitHeight="55.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                    <HBox.margin>
                        <Insets right="10.0" />
                    </HBox.margin>
                    <Image url="@img/attach_50px.png" />
                </ImageView>
-               <TextField fx:id="input" onAction="#msgProcessing" prefHeight="66.0" prefWidth="416.0" promptText="Enter to message..." styleClass="ring-color" stylesheets="@values/style.css">
+               <ImageView fitHeight="55.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                   <Image url="@img/comedy_48px.png" />
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+               </ImageView>
+               <TextField fx:id="input" onAction="#msgProcessing" prefHeight="94.0" prefWidth="446.0" promptText="Enter to message..." styleClass="ring-color" stylesheets="@values/style.css">
                    <font>
                        <Font size="20.0" />
                    </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
                </TextField>
-            <Button mnemonicParsing="false" onAction="#msgProcessing" prefHeight="56.0" prefWidth="69.0" styleClass="ring-color" stylesheets="@values/style.css">
+            <Button mnemonicParsing="false" onAction="#msgProcessing" prefHeight="83.0" prefWidth="64.0" styleClass="ring-color" stylesheets="@values/style.css">
                <graphic>
                      <ImageView fitHeight="47.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true">
                          <Image url="@img/paper_plane_48px.png" />
                      </ImageView>
                </graphic>
             </Button>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
            </HBox>
        </VBox>
    </center>

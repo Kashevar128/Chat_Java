@@ -5,14 +5,22 @@ import javafx.scene.text.Font;
 
 public class LabelChat extends Label {
 
-    private final String stylesOutgoingLabel = "-fx-background-color: #50C984;" +
+    private final String stylesOutGoingLabel = "-fx-background-color: #50C984;" +
             "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
 
-    public LabelChat(String text) {
+    private final String stylesInGoingLabel = "-fx-background-color: #2D87BF;" +
+            "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
+
+    public LabelChat(String text, boolean inOrOut) {
         super(text);
-        this.setStyle(stylesOutgoingLabel);
+        if(inOrOut) {
+            this.setStyle(stylesInGoingLabel);
+        }
+        if(!inOrOut) this.setStyle(stylesOutGoingLabel);
         this.setFont(new Font("Arial", 16));
         this.setMaxWidth(450);
         this.setWrapText(true);
     }
+
+
 }

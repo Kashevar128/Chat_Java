@@ -1,6 +1,7 @@
 package ru.net.client.gui;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListView;
@@ -8,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.WindowEvent;
 import ru.net.client.Client;
 
 public class ClientGuiController {
@@ -15,6 +17,7 @@ public class ClientGuiController {
     public ListView<HBox> output;
     @FXML
     public TextField input;
+    public TextField search;
 
     private Client client;
 
@@ -29,9 +32,9 @@ public class ClientGuiController {
     public void msgProcessing() {
         String msg = input.getText();
         if (!filter(msg)) {
-            input.clear();
             return;
         }
+        input.clear();
         getClient().send(msg);
     }
 
@@ -43,9 +46,10 @@ public class ClientGuiController {
         }
         return flag;
     }
+    //TODO: посмотреть, как можно упростить метод.
 
-    public void print(String msg) {
-        LabelChat labelChat = new LabelChat(msg);
+    public void print(String msg, Boolean inOrOut) {
+        LabelChat labelChat = new LabelChat(msg, inOrOut);
         Image image = new Image(String.valueOf(getClass().getClassLoader().getResource("img/544_oooo.plus.png")));
         ImageView profileImage = new ImageView(image);
         profileImage.setFitHeight(60);
@@ -56,5 +60,4 @@ public class ClientGuiController {
         HBox.setMargin(labelChat, new Insets(20, 10, 20, 10));
         Platform.runLater(() -> output.getItems().add(hBox));
     }
-
 }
