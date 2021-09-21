@@ -67,7 +67,6 @@ public class ClientGuiController {
     public boolean filterImage(Message msg) {
         int a = client.getConnection().getSocket().getPort();
         int b = msg.getPORT();
-        if(a == b) return true;
-        return false;
+        return a == b;
     }
 }

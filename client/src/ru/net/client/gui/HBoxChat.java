@@ -14,22 +14,24 @@ public class HBoxChat extends HBox {
     private Label label;
 
     public HBoxChat(boolean inOrOut, String text, boolean image) {
-
+        photo = getPhoto(image);
+        label = getLabel(inOrOut, text);
+        this.setAlignment(Pos.CENTER_RIGHT);
         if(inOrOut) {
             this.setAlignment(Pos.CENTER_LEFT);
-            photo = getPhoto(true);
-            label = getLabel(true, text);
-            this.setAlignment(Pos.CENTER_LEFT);
+             this.getChildren().addAll(photo, label);
         }
-        if(!inOrOut) {
-            photo = getPhoto(false);
-            label = getLabel(false, text);
+        if (!inOrOut) {
             this.setAlignment(Pos.CENTER_RIGHT);
+            this.getChildren().addAll(label, photo);
         }
-        this.getChildren().addAll(label, photo);
-        HBox.setMargin(photo, new Insets(10, 10, 10, 10));
-        HBox.setMargin(label, new Insets(20, 10, 20, 10));
+
+        HBox.setMargin(photo,new Insets(10,10,10,10));
+        HBox.setMargin(label,new Insets(20,10,20,10));
+
+
     }
+
 
     Label getLabel(boolean inOrOut, String text) {
         String stylesOutGoingLabel = "-fx-background-color: #AAE0FF;" + //
@@ -38,11 +40,11 @@ public class HBoxChat extends HBox {
         String stylesInGoingLabel = "-fx-background-color: #D3EEDF;" +
                 "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
         Label label = new Label(text);
-        if(inOrOut) {
+        if (inOrOut) {
             label.setStyle(stylesInGoingLabel);
         }
-        if(!inOrOut) label.setStyle(stylesOutGoingLabel);
-        label.setFont(new Font("Arial",16));
+        if (!inOrOut) label.setStyle(stylesOutGoingLabel);
+        label.setFont(new Font("Arial", 16));
         label.setMaxWidth(450);
         label.setWrapText(true);
 
@@ -53,8 +55,8 @@ public class HBoxChat extends HBox {
         String image01 = "img/544_oooo.plus.png";
         String image02 = "img/1223_oooo.plus.png";
         String value = null;
-        if(inOrOut) value = image01;
-        if(!inOrOut) value = image02;
+        if (inOrOut) value = image01;
+        if (!inOrOut) value = image02;
 
         Image image = new Image(String.valueOf(getClass().getClassLoader().getResource(value)));
         ImageView profileImage = new ImageView(image);
