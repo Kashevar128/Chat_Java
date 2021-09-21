@@ -4,13 +4,18 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.WindowEvent;
 import ru.net.client.Client;
+import ru.net.network.Message;
 
 public class ClientGuiController {
     @FXML
@@ -48,16 +53,21 @@ public class ClientGuiController {
     }
     //TODO: посмотреть, как можно упростить метод.
 
-    public void print(String msg, Boolean inOrOut) {
-        LabelChat labelChat = new LabelChat(msg, inOrOut);
-        Image image = new Image(String.valueOf(getClass().getClassLoader().getResource("img/544_oooo.plus.png")));
-        ImageView profileImage = new ImageView(image);
-        profileImage.setFitHeight(60);
-        profileImage.setFitWidth(60);
-        HBox hBox = new HBox();
-        hBox.getChildren().addAll(profileImage, labelChat);
-        HBox.setMargin(profileImage, new Insets(10, 10, 10, 10));
-        HBox.setMargin(labelChat, new Insets(20, 10, 20, 10));
-        Platform.runLater(() -> output.getItems().add(hBox));
+    public void print(Message msg) {
+        String text = msg.getStringValue();
+        Platform.runLater(() ->
+                output.getItems().add(new HBoxChat(filterInOrOut(msg.getNameUser()), text, filterImage(msg)))
+        );
+    }
+
+    public boolean filterInOrOut(String msg) {
+        return search.getText().equals(msg);
+    }
+
+    public boolean filterImage(Message msg) {
+        int a = client.getConnection().getSocket().getPort();
+        int b = msg.getPORT();
+        if(a == b) return true;
+        return false;
     }
 }

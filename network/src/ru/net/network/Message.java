@@ -7,10 +7,14 @@ public class Message implements Serializable {
 
     private String nameUser;
     private String stringValue;
+    private String IP;
+    private int PORT;
 
-    public Message(String stringValue, String nameUser) {
+    public Message(String stringValue, String nameUser, TCPConnection tcpConnection) {
         this.nameUser = nameUser;
         this.stringValue = "[" + nameUser + "] " + stringValue;
+        this.IP = tcpConnection.getSocket().getInetAddress().toString();
+        this.PORT = tcpConnection.getSocket().getPort();
     }
 
     public String getNameUser() {
@@ -19,5 +23,13 @@ public class Message implements Serializable {
 
     public String getStringValue() {
         return stringValue;
+    }
+
+    public String getIP() {
+        return IP;
+    }
+
+    public int getPORT() {
+        return PORT;
     }
 }
