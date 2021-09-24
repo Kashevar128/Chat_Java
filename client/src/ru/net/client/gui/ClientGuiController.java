@@ -40,7 +40,7 @@ public class ClientGuiController {
             return;
         }
         input.clear();
-        getClient().send(msg);
+        getClient().onSendPackage(client.getConnection(), msg);
     }
 
     private static boolean filter (String msg) {
@@ -55,18 +55,9 @@ public class ClientGuiController {
 
     public void print(Message msg) {
         String text = msg.getStringValue();
+        Boolean inOrOut = msg.isInOrOut();
         Platform.runLater(() ->
-                output.getItems().add(new HBoxChat(filterInOrOut(msg.getNameUser()), text, filterImage(msg)))
+                output.getItems().add(new HBoxChat(text, inOrOut))
         );
-    }
-
-    public boolean filterInOrOut(String msg) {
-        return search.getText().equals(msg);
-    }
-
-    public boolean filterImage(Message msg) {
-        int a = client.getConnection().getSocket().getPort();
-        int b = msg.getPORT();
-        return a == b;
     }
 }

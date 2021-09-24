@@ -9,12 +9,22 @@ public class Message implements Serializable {
     private String stringValue;
     private String IP;
     private int PORT;
+    private boolean inOrOut;
 
-    public Message(String stringValue, String nameUser, TCPConnection tcpConnection) {
+    public Message(String stringValue, String nameUser, String IP, int PORT) {
         this.nameUser = nameUser;
         this.stringValue = "[" + nameUser + "] " + stringValue;
-        this.IP = tcpConnection.getSocket().getInetAddress().toString();
-        this.PORT = tcpConnection.getSocket().getPort();
+        this.IP = IP;
+        this.PORT = PORT;
+        this.inOrOut = true;
+    }
+
+    public boolean isInOrOut() {
+        return inOrOut;
+    }
+
+    public void setInOrOut(boolean inOrOut) {
+        this.inOrOut = inOrOut;
     }
 
     public String getNameUser() {

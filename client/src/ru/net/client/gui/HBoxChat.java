@@ -13,10 +13,9 @@ public class HBoxChat extends HBox {
     private ImageView photo;
     private Label label;
 
-    public HBoxChat(boolean inOrOut, String text, boolean image) {
-        photo = getPhoto(image);
+    public HBoxChat(String text, boolean inOrOut) {
+        photo = getPhoto(true);
         label = getLabel(inOrOut, text);
-        this.setAlignment(Pos.CENTER_RIGHT);
         if(inOrOut) {
             this.setAlignment(Pos.CENTER_LEFT);
              this.getChildren().addAll(photo, label);

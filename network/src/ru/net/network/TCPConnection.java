@@ -34,7 +34,7 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
                         disconnect();
                         break;
                     }
-                    eventListener.onReceiveString(TCPConnection.this, msg); // Вызываем событие - получение сообщения, передаем экземпляр подключения и само сообщение
+                    eventListener.onReceivePackage(TCPConnection.this, msg); // Вызываем событие - получение сообщения, передаем экземпляр подключения и само сообщение
                 }
             } catch (IOException | ClassNotFoundException e) {
                 eventListener.onException(TCPConnection.this, e); // Вызываем событие - выброс исключения

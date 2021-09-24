@@ -56,6 +56,14 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) { // Проходимся переменной по всей коллекции
+            if((msg.getIP().equals(tcpConnection.getSocket().getInetAddress().toString())  &&
+                    msg.getPORT() == tcpConnection.getSocket().getPort())) {
+                msg.setInOrOut(false);
+            }
+            System.out.println(msg.getIP());
+            System.out.println(msg.getPORT());
+            System.out.println(tcpConnection.getSocket().getInetAddress());
+            System.out.println(tcpConnection.getSocket().getPort());
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
         }
     }
@@ -74,7 +82,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     }
 
     @Override
-    public synchronized void onReceiveString(TCPConnection tcpConnection, Message msg) {
+    public synchronized void onReceivePackage(TCPConnection tcpConnection, Message msg) {
         sendToAllConnections(msg);
         printMsg(msg.getStringValue());
     }
@@ -91,12 +99,19 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        String stringMsg = fieldInput.getText(); // Записываем в переменную текст из поля ввода сообщения
+    public void onSendPackage(TCPConnection tcpConnection, String stringMsg) {
         if(stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
-        Message msg = new Message(NAME_SERVER + ":" + stringMsg, NAME_SERVER, connection);
-        sendToAllConnections(msg); // Рассылка сообщений клиентам
+
+        String localIp = tcpConnection.getSocket().getLocalAddress().toString();
+        int localPort = tcpConnection.getSocket().getPort();
+        Message pack = new Message(stringMsg, NAME_SERVER, localIp, localPort);
+        sendToAllConnections(pack); // Рассылка сообщений клиентам
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        onSendPackage(connection, fieldInput.getText());
     }
 }

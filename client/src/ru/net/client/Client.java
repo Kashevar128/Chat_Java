@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "192.168.0.104";// 172.22.34.61- доп. IP // Переменная c IP машины
+    private static final String IP_ADDR = "172.22.34.61";// 192.168.0.104- доп. IP // Переменная c IP машины
     private static final int PORT = 8189; // Переменная с портом
 
     private ClientGuiController controller;
@@ -20,6 +20,9 @@ public class Client implements TCPConnectionListener { // делаем насл�
         this.controller = controller;
         try { // Блок для обхода исключений
             connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
+            System.out.println(connection);
+            System.out.println("Клиент" + connection.getSocket().getLocalPort());
+            System.out.println("Клиент" + connection.getSocket().getLocalAddress());
         } catch (IOException e) {
             System.out.println("Сервер не работает");
         }
@@ -35,8 +38,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
     }
 
     @Override
-    public void onReceiveString(TCPConnection tcpConnection, Message msg) {
-        printMsg(msg);
+    public void onReceivePackage(TCPConnection tcpConnection, Message msg) {
+        controller.print(msg);
     }
 
     @Override
@@ -49,13 +52,14 @@ public class Client implements TCPConnectionListener { // делаем насл�
         System.out.println("Сервер закрыт!");
     }
 
-    private void printMsg(Message msg) { // Метод для выведения сообщения в поле диалога
-        controller.print(msg);
-    }
-
-    public void send(String msg) {
-        Message value = new Message(msg, controller.search.getText(), connection);
-        connection.sendMessage(value);
+    @Override
+    public void onSendPackage(TCPConnection tcpConnection, String msg) {
+        String localIp = tcpConnection.getSocket().getLocalAddress().toString();
+        int localPort = tcpConnection.getSocket().getLocalPort();
+        Message pack = new Message(msg, controller.search.getText(), localIp, localPort);
+        connection.sendMessage(pack);
+        System.out.println(localIp);
+        System.out.println(localPort);
     }
 
 }
