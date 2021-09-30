@@ -60,6 +60,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                     msg.getPORT() == tcpConnection.getSocket().getPort())) {
                 msg.setInOrOut(false);
             }
+            else msg.setInOrOut(true);
             System.out.println(msg.getIP());
             System.out.println(msg.getPORT());
             System.out.println(tcpConnection.getSocket().getInetAddress());
@@ -105,7 +106,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         printMsg(stringMsg);
 
         String localIp = tcpConnection.getSocket().getLocalAddress().toString();
-        int localPort = tcpConnection.getSocket().getPort();
+        int localPort = tcpConnection.getSocket().getLocalPort();
         Message pack = new Message(stringMsg, NAME_SERVER, localIp, localPort);
         sendToAllConnections(pack); // Рассылка сообщений клиентам
     }
