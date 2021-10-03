@@ -35,6 +35,7 @@ public class ClientGui extends Application {
         controller.setClient(client);
 
 
+
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -42,7 +43,7 @@ public class ClientGui extends Application {
                 try {
                     client.getConnection().disconnect();
                 } catch (Exception e) {
-                    System.out.println("Корректное завершение работы клиента.");
+                    System.out.println("Корректное завершение работы клиента");
                 }
             }
         });
