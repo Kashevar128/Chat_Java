@@ -20,11 +20,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
         this.controller = controller;
         try { // Блок для обхода исключений
             connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
-            System.out.println(connection);
-            System.out.println("Клиент" + connection.getSocket().getLocalPort());
-            System.out.println("Клиент" + connection.getSocket().getLocalAddress());
         } catch (IOException e) {
-            System.out.println("Сервер не работает");
+            e.printStackTrace();
         }
     }
 
@@ -44,12 +41,12 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onDisconnect(TCPConnection tcpConnection) {
-        System.out.println("Соединение " + tcpConnection + " закрыто");
+        System.out.println("Connection " + tcpConnection + " close");
     }
 
     @Override
     public void onException(TCPConnection tcpConnection, Exception e) {
-        System.out.println("Сервер закрыт!");
+        System.out.println("Server not found");
     }
 
     @Override

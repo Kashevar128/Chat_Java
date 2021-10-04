@@ -40,7 +40,7 @@ public class ClientGuiController {
             return;
         }
         input.clear();
-        getClient().onSendPackage(client.getConnection(), msg);
+        getClient().onSendPackage(client.getConnection(), msg + "\uD83D\uDE00");
     }
 
     private static boolean filter (String msg) {
