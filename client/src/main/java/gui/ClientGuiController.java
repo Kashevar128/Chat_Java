@@ -1,20 +1,13 @@
-package ru.net.client.gui;
+package gui;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.stage.WindowEvent;
-import ru.net.client.Client;
+import clientlogic.Client;
+
+
 import ru.net.network.Message;
 
 public class ClientGuiController {

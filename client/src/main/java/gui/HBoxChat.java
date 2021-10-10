@@ -1,4 +1,4 @@
-package ru.net.client.gui;
+package gui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

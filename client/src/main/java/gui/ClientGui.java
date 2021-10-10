@@ -1,21 +1,18 @@
-package ru.net.client.gui;
+package gui;
 
+import clientlogic.Client;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import ru.net.client.Client;
 
-import javax.swing.*;
-import java.io.IOException;
 
 public class ClientGui extends Application {
     private Stage stage;
-    private ClientGuiController controller;
+    private gui.ClientGuiController controller;
     private Client client;
 
     @Override

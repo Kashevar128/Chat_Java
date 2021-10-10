@@ -1,4 +1,4 @@
-package ru.net.client.gui.avatar;
+package avatar;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -59,7 +59,7 @@ public class AvatarHelper {
         _2d.dispose();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(img, "png", byteArrayOutputStream);
-        ImageIO.write(img, "png", new File("client\\resources\\img\\output.png"));
+        ImageIO.write(img, "png", new File("clientlogic\\resources\\img\\output.png"));
         return byteArrayOutputStream.toByteArray();
     }
 
