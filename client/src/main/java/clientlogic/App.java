@@ -5,9 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -25,6 +23,21 @@ public class App {
         return DriverManager.getConnection("jdbc:h2:~/test");
     }
 
+     private int executeUpdate(String query) throws SQLException {
+        Statement statement = connection.createStatement();
+        int result = statement.executeUpdate(query);
+        return result;
+     }
+
+     private void createResultSet() throws SQLException {
+        String query = "SELECT * FROM ... WHERE name = ?";
+         PreparedStatement preparedStatement = connection.prepareStatement(query);
+         preparedStatement.setString(1, "IVAN");
+         boolean result = preparedStatement.execute();
+         ResultSet resultSet = preparedStatement.getResultSet();
+         resultSet.next();
+     }
+
     @Before
     public void init() throws SQLException {
         connection = getConnection();
@@ -34,13 +47,6 @@ public class App {
         connection.close();
     }
 
-    @Test
-    public void shouldGetJDBCConnection() throws SQLException {
-        try (Connection connection = getConnection()) {
-            assertTrue(connection.isValid(1));
-            assertTrue(connection.isClosed());
-        }
-    }
 }
 
 
