@@ -1,80 +1,46 @@
 package clientlogic;
 
+import org.intellij.lang.annotations.Language;
+
 import java.sql.*;
 
 public class DataBase {
 
-    public static void main(String[] args) throws Exception {
-        init();
+    private static Connection connection;
 
-        try (Connection connection = getConnection()) {
-            //  statements(connection);
-            resultSet(connection);
-
-            prepare(connection);
-            resultSet(connection);
+    public DataBase() {
+        try {
+            connection = getConnection();
+            DataBase.createTable();
+            DataBase.resultSet();
+        } catch (SQLException ignored) {
+            ignored.printStackTrace();
         }
     }
 
-    private static void init() throws ClassNotFoundException {
-        Class.forName("org.h2.Driver");
+    public Connection getConnection() throws SQLException {
+        @Language("SQL")
+        String query_00 = "jdbc:h2:mem:test";
+        return DriverManager.getConnection(query_00);
     }
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:h2:~/test");
-    }
-
-    public static void statements(Connection connection) throws SQLException {
+    private static void createTable() throws SQLException {
+        @Language("SQL")
+        String query_01 = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTO_INCREMENT," +
+                "name VARCHAR(100), password VARCHAR(100));";
         try (Statement statement = connection.createStatement()) {
-            statement.execute("create table user(" +
-                    "id integer primary key auto_increment, " +
-                    "name varchar(100));");
-            statement.execute("insert into user(name) values('borya'), ('petya')");
+            statement.execute(query_01);
         }
     }
 
-
-    public static void resultSet(Connection connection) throws SQLException {
+    public static void resultSet() throws SQLException {
+        @Language("SQL")
+        String query_02 = "SELECT * FROM users";
         try (Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery("select * from user");
+            ResultSet rs = statement.executeQuery(query_02);
             while (rs.next()) {
-                System.out.println(rs.getInt("id") + " : " + rs.getString("name"));
+                System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " ; " + rs.getString("password"));
             }
-            System.out.println("--------------------");
-        }
-    }
-
-    public static void prepare(Connection connection) throws SQLException {
-
-        String s = "";
-
-        try (PreparedStatement statement = connection.prepareStatement("insert into user(id, name) values(?,?)")) {
-
-            statement.setInt(1, 3);
-            statement.setString(2, "fedya");
-            statement.executeUpdate();
-
-            statement.setInt(1, 4);
-            statement.setString(2, "misha");
-            statement.addBatch();
-            statement.executeBatch();
-        }
-    }
-
-    public static void transactions(Connection connection) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-
-            connection.setAutoCommit(false);
-
-            connection.setAutoCommit(false);
-            try {
-                statement.execute("insert into user(name) values('kesha')");
-                connection.commit();
-            } catch (SQLException e) {
-                connection.rollback();
-            }
-            connection.setAutoCommit(true);
-
         }
     }
 

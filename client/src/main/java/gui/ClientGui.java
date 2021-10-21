@@ -12,7 +12,7 @@ import javafx.stage.WindowEvent;
 
 public class ClientGui extends Application {
     private Stage stage;
-    private gui.ClientGuiController controller;
+    private ClientGuiController controller;
     private Client client;
 
     @Override
