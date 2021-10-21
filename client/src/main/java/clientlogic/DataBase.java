@@ -8,10 +8,13 @@ public class DataBase {
         init();
 
         try (Connection connection = getConnection()) {
-            //  statements(connection);
+            statements(connection);
             resultSet(connection);
 
             prepare(connection);
+            resultSet(connection);
+
+            transactions(connection);
             resultSet(connection);
         }
     }
@@ -56,6 +59,9 @@ public class DataBase {
 
             statement.setInt(1, 4);
             statement.setString(2, "misha");
+            statement.addBatch();
+            statement.setInt(1, 5);
+            statement.setString(2, "grisha");
             statement.addBatch();
             statement.executeBatch();
         }
