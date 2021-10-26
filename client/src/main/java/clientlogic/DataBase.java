@@ -11,8 +11,7 @@ public class DataBase {
     public DataBase() {
         try {
             connection = getConnection();
-            DataBase.createTable();
-            DataBase.resultSet();
+            createTable();
         } catch (SQLException ignored) {
             ignored.printStackTrace();
         }
@@ -20,7 +19,7 @@ public class DataBase {
 
     public Connection getConnection() throws SQLException {
         @Language("SQL")
-        String query_00 = "jdbc:h2:mem:test";
+        String query_00 = "jdbc:h2:./test";
         return DriverManager.getConnection(query_00);
     }
 
@@ -41,6 +40,15 @@ public class DataBase {
             while (rs.next()) {
                 System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " ; " + rs.getString("password"));
             }
+        }
+    }
+
+    public static void delete(int ID) throws SQLException {
+        @Language("SQL")
+        String query_00 = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query_00)) {
+            statement.setInt(1, ID);
+            statement.executeUpdate();
         }
     }
 

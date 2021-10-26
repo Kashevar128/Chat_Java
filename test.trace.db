@@ -1,0 +1,19 @@
+2021-10-26 15:31:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "DELETE FROM USERS WHERE ID[*] == @ID"
+Syntax error in SQL statement "DELETE FROM USERS WHERE ID[*] == @ID"; SQL statement:
+DELETE FROM users WHERE id == @ID [42000-200]
+2021-10-26 15:49:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "DELETE FROM USERS WHERE ID[*] == ?"
+Syntax error in SQL statement "DELETE FROM USERS WHERE ID[*] == ?"; SQL statement:
+DELETE FROM users WHERE id == ? [42000-200]
+2021-10-26 15:49:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Недопустимое значение "2" для параметра "parameterIndex"
+Invalid value "2" for parameter "parameterIndex" [90008-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:590)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.getInvalidValueException(DbException.java:280)
+	at org.h2.jdbc.JdbcPreparedStatement.setParameter(JdbcPreparedStatement.java:1503)
+	at org.h2.jdbc.JdbcPreparedStatement.setInt(JdbcPreparedStatement.java:394)
+	at clientlogic.DataBase.delete(DataBase.java:50)
+	at clientlogic.DataBaseAuthService.main(DataBaseAuthService.java:21)

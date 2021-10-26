@@ -43,4 +43,5 @@ public class DataBaseAuthService implements AuthService {
     public boolean auth(String name, String pass) {
         return false;
     }
+
 }

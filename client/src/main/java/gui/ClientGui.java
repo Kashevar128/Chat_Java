@@ -24,7 +24,6 @@ public class ClientGui extends Application {
         stage = new Stage();
         stage.setTitle("Сетевой чат");
         stage.setScene(new Scene(chat));
-        stage.setResizable(true);
         stage.setResizable(false);
         stage.show();
 
