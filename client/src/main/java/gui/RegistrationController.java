@@ -16,15 +16,10 @@ public class RegistrationController {
     public TextField login;
     public TextField password;
 
-    public void enter() throws IOException, SQLException {
+    public void enter() throws Exception {
         DataBaseAuthService.getInstance().addUser(login.getText(), password.getText());
-//        Parent chat = FXMLLoader.load(getClass().getResource("/chatWork.fxml"));
-//        Stage stage = new Stage();
-//        stage.setTitle("Сетевой чат");
-//        stage.setScene(new Scene(chat));
-//        stage.setResizable(false);
-//        stage.show();
         login.getScene().getWindow().hide();
+        new ClientGui();
         DataBase.resultSet();
     }
 }

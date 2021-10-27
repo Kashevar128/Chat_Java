@@ -3,7 +3,9 @@ package clientlogic;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 public class DataBaseAuthService implements AuthService {
@@ -40,8 +42,16 @@ public class DataBaseAuthService implements AuthService {
     }
 
     @Override
-    public boolean auth(String name, String pass) {
-        return false;
+    public boolean auth(String name, String pass) throws SQLException {
+        @Language("SQL")
+                String query_02 = "SELECT * FROM users";
+        try (Statement statement = db.getConnection().createStatement()) {
+            ResultSet rs = statement.executeQuery(query_02);
+            while (rs.next()) {
+                if (rs.getString("name").equals(name) && rs.getString("password").equals(pass)) return true;
+            }
+            return false;
+        }
     }
 
 }
