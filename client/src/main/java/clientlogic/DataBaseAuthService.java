@@ -31,13 +31,17 @@ public class DataBaseAuthService implements AuthService {
     }
 
     @Override
-    public void addUser(String name, String pass) throws SQLException {
+    public boolean addUser(String name, String pass) {
         @Language("SQL")
                 String query_01 = "INSERT INTO users (name, password) VALUES (?,?)";
         try (PreparedStatement statement = db.getConnection().prepareStatement(query_01)) {
             statement.setString(1, name);
             statement.setString(2, pass);
             statement.executeUpdate();
+            return true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

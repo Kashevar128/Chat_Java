@@ -9,14 +9,16 @@ import java.io.IOException;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "192.168.0.104";// 172.22.34.61- доп. IP // Переменная c IP машины
+    private static final String IP_ADDR = "172.22.34.61";// 192.168.0.104- доп. IP // Переменная c IP машины
     private static final int PORT = 8189; // Переменная с портом
 
     private ClientGuiController controller;
     private TCPConnection connection; // Поле для экземпляра канала
+    private String loginUser;
 
-    public Client(ClientGuiController controller) throws IOException {
+    public Client(ClientGuiController controller, String login) throws IOException {
         this.controller = controller;
+        loginUser = login;
         try { // Блок для обхода исключений
             connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
         } catch (IOException e) {
@@ -52,7 +54,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public void onSendPackage(TCPConnection tcpConnection, String msg) {
         String localIp = tcpConnection.getSocket().getLocalAddress().toString();
         int localPort = tcpConnection.getSocket().getLocalPort();
-        Message pack = new Message(msg, controller.search.getText(), localIp, localPort);
+        Message pack = new Message(msg, loginUser, localIp, localPort);
         connection.sendMessage(pack);
         System.out.println(localIp);
         System.out.println(localPort);

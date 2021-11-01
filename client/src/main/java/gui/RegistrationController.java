@@ -17,9 +17,11 @@ public class RegistrationController {
     public TextField password;
 
     public void enter() throws Exception {
-        DataBaseAuthService.getInstance().addUser(login.getText(), password.getText());
-        login.getScene().getWindow().hide();
-        new ClientGui();
-        DataBase.resultSet();
+       boolean reg = DataBaseAuthService.getInstance().addUser(login.getText(), password.getText());
+       if(reg) {
+           login.getScene().getWindow().hide();
+           new ClientGui(login.getText());
+           DataBase.resultSet();
+       }
     }
 }

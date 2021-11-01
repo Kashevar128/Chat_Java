@@ -10,12 +10,12 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
-public class ClientGui extends Application {
+public class ClientGui {
     private Stage stage;
     private ClientGuiController controller;
     private Client client;
 
-    public ClientGui() throws Exception {
+    public ClientGui(String login) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatWork.fxml"));
         Parent chat = loader.load();
         controller = loader.getController();
@@ -26,7 +26,7 @@ public class ClientGui extends Application {
         stage.setResizable(false);
         stage.show();
 
-        client = new Client(controller);
+        client = new Client(controller, login);
         controller.setClient(client);
 
 
@@ -44,37 +44,5 @@ public class ClientGui extends Application {
         });
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatWork.fxml"));
-        Parent chat = loader.load();
-        controller = loader.getController();
 
-        stage = new Stage();
-        stage.setTitle("Сетевой чат");
-        stage.setScene(new Scene(chat));
-        stage.setResizable(false);
-        stage.show();
-
-        client = new Client(controller);
-        controller.setClient(client);
-
-
-
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                System.out.println("Клиент закрыт");
-                try {
-                    client.getConnection().disconnect();
-                } catch (Exception e) {
-                    System.out.println("Корректное завершение работы клиента");
-                }
-            }
-        });
-    }
-
-    public static void main(String[] args) {
-        ClientGui.launch();
-    }
 }

@@ -1,6 +1,7 @@
 package gui;
 
 import clientlogic.DataBaseAuthService;
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,7 +21,7 @@ public class AuthController {
                 .auth(login.getText(), password.getText());
         if(auth) {
             login.getScene().getWindow().hide();
-            new ClientGui();
+            new ClientGui(login.getText());
         }else {
             login.setText("WRONG LOGIN OR PASSWORD");
             password.clear();
