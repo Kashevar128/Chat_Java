@@ -4,12 +4,13 @@ import gui.ClientGuiController;
 import ru.net.network.Message;
 import ru.net.network.TCPConnection;
 import ru.net.network.TCPConnectionListener;
+import ru.net.network.TypeMessage;
 
 import java.io.IOException;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "172.22.34.61";// 192.168.0.104- доп. IP // Переменная c IP машины
+    private static final String IP_ADDR = "192.168.0.104";//172.22.34.61- доп. IP // Переменная c IP машины
     private static final int PORT = 8189; // Переменная с портом
 
     private ClientGuiController controller;
@@ -20,7 +21,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
         this.controller = controller;
         loginUser = login;
         try { // Блок для обхода исключений
-            connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
+            connection = new TCPConnection(this, IP_ADDR, PORT, loginUser); // Создаем TCP - соединение
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,7 +55,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public void onSendPackage(TCPConnection tcpConnection, String msg) {
         String localIp = tcpConnection.getSocket().getLocalAddress().toString();
         int localPort = tcpConnection.getSocket().getLocalPort();
-        Message pack = new Message(msg, loginUser, localIp, localPort);
+        Message pack = new Message(msg, loginUser, TypeMessage.VERBAL_MESSAGE);
         connection.sendMessage(pack);
         System.out.println(localIp);
         System.out.println(localPort);

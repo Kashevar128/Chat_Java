@@ -19,7 +19,7 @@ public class DataBase {
 
     public Connection getConnection() throws SQLException {
         @Language("SQL")
-        String query_00 = "jdbc:h2:./test";
+        String query_00 = "jdbc:h2:tcp://localhost:12345/~/test";
         return DriverManager.getConnection(query_00);
     }
 
@@ -51,5 +51,7 @@ public class DataBase {
             statement.executeUpdate();
         }
     }
+
+
 
 }

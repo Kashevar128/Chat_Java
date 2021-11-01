@@ -3,6 +3,7 @@ package ru.net.server;
 import ru.net.network.Message;
 import ru.net.network.TCPConnection;
 import ru.net.network.TCPConnectionListener;
+import ru.net.network.TypeMessage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,13 +57,10 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) { // Проходимся переменной по всей коллекции
-            if((msg.getIP().equals(tcpConnection.getSocket().getInetAddress().toString())  &&
-                    msg.getPORT() == tcpConnection.getSocket().getPort())) {
+            if(msg.getNameUser().equals(connection.getUserName())) {
                 msg.setInOrOut(false);
             }
             else msg.setInOrOut(true);
-            System.out.println(msg.getIP());
-            System.out.println(msg.getPORT());
             System.out.println(tcpConnection.getSocket().getInetAddress());
             System.out.println(tcpConnection.getSocket().getPort());
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
@@ -104,10 +102,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         if(stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
-
-        String localIp = tcpConnection.getSocket().getLocalAddress().toString();
-        int localPort = tcpConnection.getSocket().getLocalPort();
-        Message pack = new Message(stringMsg, NAME_SERVER, localIp, localPort);
+        Message pack = new Message(stringMsg, NAME_SERVER, TypeMessage.VERBAL_MESSAGE);
         sendToAllConnections(pack); // Рассылка сообщений клиентам
     }
 

@@ -17,8 +17,6 @@ public class DataBaseAuthService implements AuthService {
     }
 
     public static void main(String[] args) throws SQLException {
-//        getInstance().addUser("Слава", "pass");
-//        getInstance().addUser("Серега", "pass01");
         getInstance();
         DataBase.resultSet();
     }

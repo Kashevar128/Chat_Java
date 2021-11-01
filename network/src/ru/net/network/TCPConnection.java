@@ -8,19 +8,17 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
     private final Socket socket; // Поле сокета
     private Thread readThread; // Поток чтения сообщений, не финал, так как состояние потока может изменится - он может оказаться прерванным
     private final TCPConnectionListener eventListener; // Экземпляр интерфейса для доступа к его методам - событиям
-//    private final BufferedReader in; // Экземпляр входящего потока в обертке класса для буферизации сообщений
-//    private final BufferedWriter out; // Экземпляр для исходящего потока в обертке класса для буферизации сообщений
     private final ObjectOutputStream outObj;
     private final ObjectInputStream inObj;
+    private String userName;
 
-    public TCPConnection (TCPConnectionListener eventListener, String ipAdd, int port) throws IOException {
+    public TCPConnection (TCPConnectionListener eventListener, String ipAdd, int port, String userName) throws IOException {
         this (new Socket(ipAdd, port), eventListener); // Создаем конструктор для нового сокета, использует ссылку на второй конструктор
+        this.userName = userName;
     }
 
     public TCPConnection(Socket socket, TCPConnectionListener eventListener) throws IOException { //Конструктор с исключением для случая неудачного установления или прерывания канала чтения, конструктор используется для созданного заранее сокета
         this.socket = socket;
-//        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)); //Поток, извлекаемый из сокета вместе с типом кодировки передается новому объекту InputStreamReader для конвертирования байтов в символы,
-//        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));//затем все это на вход BufferedReader для удобства чтения и повышения эффективности передачи сообщений за счет наличия промежуточного буфера.
         outObj = new ObjectOutputStream(socket.getOutputStream());
         inObj = new ObjectInputStream(socket.getInputStream());
         this.eventListener = eventListener;
@@ -47,6 +45,10 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public synchronized void sendMessage (Message msg) { // Метод для отправки сообщений

@@ -5,19 +5,19 @@ import java.net.Socket;
 
 public class Message implements Serializable {
 
+    private TypeMessage typeMessage;
     private String nameUser;
     private String stringValue;
-    private String IP;
-    private int PORT;
     private boolean inOrOut;
 
-    public Message(String stringValue, String nameUser, String IP, int PORT) {
+    public Message(String stringValue, String nameUser, TypeMessage typeMessage) {
+        this.typeMessage = typeMessage;
         this.nameUser = nameUser;
         this.stringValue = "[" + nameUser + "] " + stringValue;
-        this.IP = IP;
-        this.PORT = PORT;
         this.inOrOut = true;
     }
+
+   // public Message()
 
     public boolean isInOrOut() {
         return inOrOut;
@@ -35,11 +35,4 @@ public class Message implements Serializable {
         return stringValue;
     }
 
-    public String getIP() {
-        return IP;
-    }
-
-    public int getPORT() {
-        return PORT;
-    }
 }
