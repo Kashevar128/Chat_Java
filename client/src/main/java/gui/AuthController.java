@@ -1,14 +1,9 @@
 package gui;
 
-import clientlogic.DataBaseAuthService;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import clientlogic.DataBase;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AuthController {
@@ -17,12 +12,12 @@ public class AuthController {
     public TextField password;
 
     public void enter() throws Exception {
-        boolean auth = DataBaseAuthService.getInstance()
+        boolean auth = DataBase.getInstance()
                 .auth(login.getText(), password.getText());
-        if(auth) {
+        if (auth) {
             login.getScene().getWindow().hide();
             new ClientGui(login.getText());
-        }else {
+        } else {
             login.setText("WRONG LOGIN OR PASSWORD");
             password.clear();
         }

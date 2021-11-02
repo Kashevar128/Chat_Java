@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "192.168.0.104";//172.22.34.61- доп. IP // Переменная c IP машины
+    private static final String IP_ADDR = "172.22.34.61";// 192.168.0.104- доп. IP // Переменная c IP машины
     private static final int PORT = 8189; // Переменная с портом
 
     private ClientGuiController controller;

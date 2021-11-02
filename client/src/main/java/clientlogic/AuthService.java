@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public interface AuthService {
 
-    boolean addUser(String name, String pass) throws SQLException;
+    public boolean addUser(String name, String pass) throws Exception;
 
-    boolean auth(String name, String pass) throws SQLException;
+    public boolean auth(String name, String pass) throws Exception;
 }
