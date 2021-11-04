@@ -10,11 +10,9 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
     private final TCPConnectionListener eventListener; // Экземпляр интерфейса для доступа к его методам - событиям
     private final ObjectOutputStream outObj;
     private final ObjectInputStream inObj;
-    private String userName;
 
-    public TCPConnection (TCPConnectionListener eventListener, String ipAdd, int port, String userName) throws IOException {
+    public TCPConnection (TCPConnectionListener eventListener, String ipAdd, int port) throws IOException {
         this (new Socket(ipAdd, port), eventListener); // Создаем конструктор для нового сокета, использует ссылку на второй конструктор
-        this.userName = userName;
     }
 
     public TCPConnection(Socket socket, TCPConnectionListener eventListener) throws IOException { //Конструктор с исключением для случая неудачного установления или прерывания канала чтения, конструктор используется для созданного заранее сокета
@@ -47,9 +45,6 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
         return socket;
     }
 
-    public String getUserName() {
-        return userName;
-    }
 
     public synchronized void sendMessage (Message msg) { // Метод для отправки сообщений
         try {
@@ -57,6 +52,7 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
             outObj.flush(); // Сбрасываем написанное в буфере в поток, если вдруг сообщение застряло в буфере и не передалось по сети
         } catch (IOException e) {
             System.out.println("Connection close");
+            e.printStackTrace();
             disconnect(); // Раз появилось исключение, то что-то работаем не так, в связи с этим применяем метод disconnect
         }
     }

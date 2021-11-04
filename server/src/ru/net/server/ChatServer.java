@@ -1,9 +1,6 @@
 package ru.net.server;
 
-import ru.net.network.Message;
-import ru.net.network.TCPConnection;
-import ru.net.network.TCPConnectionListener;
-import ru.net.network.TypeMessage;
+import ru.net.network.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +24,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
     private TCPConnection connection;
     private static final String NAME_SERVER = "Admin";
+    private ID id_admin;
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -52,12 +50,17 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         } catch (IOException e) {
             printMsg("Client kicked");
         }
+        id_admin = new ID(connection.getSocket().getLocalAddress().toString(), connection.getSocket().getLocalPort());
 
     }
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
-        for (TCPConnection tcpConnection : connections) { // Проходимся переменной по всей коллекции
-            if(msg.getNameUser().equals(connection.getUserName())) {
+        String IP_tcp;
+        int port_tcp;
+        for (TCPConnection tcpConnection : connections) {
+            IP_tcp = tcpConnection.getSocket().getInetAddress().toString();
+            port_tcp = tcpConnection.getSocket().getPort();// Проходимся переменной по всей коллекции
+            if(msg.getId().getIP_user().equals(IP_tcp) && msg.getId().getPort_user() == port_tcp) {
                 msg.setInOrOut(false);
             }
             else msg.setInOrOut(true);
@@ -102,7 +105,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         if(stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
-        Message pack = new Message(stringMsg, NAME_SERVER, TypeMessage.VERBAL_MESSAGE);
+        Message pack = new Message(stringMsg, NAME_SERVER, TypeMessage.VERBAL_MESSAGE, id_admin);
         sendToAllConnections(pack); // Рассылка сообщений клиентам
     }
 

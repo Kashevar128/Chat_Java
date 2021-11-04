@@ -18,7 +18,7 @@ public class HBoxChat extends HBox {
         label = getLabel(inOrOut, text);
         if(inOrOut) {
             this.setAlignment(Pos.CENTER_LEFT);
-             this.getChildren().addAll(photo, label);
+            this.getChildren().addAll(photo, label);
         }
         if (!inOrOut) {
             this.setAlignment(Pos.CENTER_RIGHT);
@@ -33,11 +33,12 @@ public class HBoxChat extends HBox {
 
 
     Label getLabel(boolean inOrOut, String text) {
+        String stylesInGoingLabel = "-fx-background-color: #D3EEDF;" +
+                "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
+
         String stylesOutGoingLabel = "-fx-background-color: #AAE0FF;" + //
                 "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
 
-        String stylesInGoingLabel = "-fx-background-color: #D3EEDF;" +
-                "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
         Label label = new Label(text);
         if (inOrOut) {
             label.setStyle(stylesInGoingLabel);

@@ -1,7 +1,6 @@
 package ru.net.network;
 
 import java.io.Serializable;
-import java.net.Socket;
 
 public class Message implements Serializable {
 
@@ -9,15 +8,19 @@ public class Message implements Serializable {
     private String nameUser;
     private String stringValue;
     private boolean inOrOut;
+    private ID id;
 
-    public Message(String stringValue, String nameUser, TypeMessage typeMessage) {
+    public Message(String stringValue, String nameUser, TypeMessage typeMessage, ID id) {
+        this.id = id;
         this.typeMessage = typeMessage;
         this.nameUser = nameUser;
         this.stringValue = "[" + nameUser + "] " + stringValue;
         this.inOrOut = true;
     }
 
-   // public Message()
+    public ID getId() {
+        return id;
+    }
 
     public boolean isInOrOut() {
         return inOrOut;
