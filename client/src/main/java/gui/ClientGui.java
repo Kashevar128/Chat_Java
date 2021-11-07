@@ -14,11 +14,13 @@ public class ClientGui {
     private Stage stage;
     private ClientGuiController controller;
     private Client client;
+    private String nameUser;
 
-    public ClientGui(String login) throws Exception {
+    public ClientGui(String name) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatWork.fxml"));
         Parent chat = loader.load();
         controller = loader.getController();
+        nameUser = name;
 
         stage = new Stage();
         stage.setTitle("Сетевой чат");
@@ -26,7 +28,7 @@ public class ClientGui {
         stage.setResizable(false);
         stage.show();
 
-        client = new Client(controller, login);
+        client = new Client(controller, nameUser);
         controller.setClient(client);
 
 

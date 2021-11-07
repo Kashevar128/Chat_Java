@@ -105,7 +105,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         if(stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
-        Message pack = new Message(stringMsg, NAME_SERVER, TypeMessage.VERBAL_MESSAGE, id_admin);
+        Message pack = new Message(stringMsg, NAME_SERVER, id_admin);
         sendToAllConnections(pack); // Рассылка сообщений клиентам
     }
 

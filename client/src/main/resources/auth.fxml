@@ -7,8 +7,14 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="354.0" prefWidth="497.0" styleClass="gray-background-color" stylesheets="@values/style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AuthController">
-      <TextField fx:id="login" layoutX="127.0" layoutY="93.0" prefHeight="38.0" prefWidth="243.0" />
-      <TextField fx:id="password" layoutX="127.0" layoutY="158.0" prefHeight="38.0" prefWidth="243.0" />
+      <TextField fx:id="login" layoutX="127.0" layoutY="93.0" prefHeight="38.0" prefWidth="243.0">
+      <font>
+         <Font size="18.0" />
+      </font></TextField>
+      <TextField fx:id="password" layoutX="127.0" layoutY="158.0" prefHeight="38.0" prefWidth="243.0">
+      <font>
+         <Font size="18.0" />
+      </font></TextField>
       <Button layoutX="198.0" layoutY="215.0" mnemonicParsing="false" onAction="#enter" prefHeight="44.0" prefWidth="101.0" text="Enter" textFill="#18c92db8">
       <font>
          <Font name="Lucida Sans Demibold Italic" size="18.0" />
@@ -20,6 +26,16 @@
    <Label layoutX="160.0" layoutY="35.0" text="Authorization" textFill="#3ba58b">
       <font>
          <Font name="Lucida Sans Demibold Italic" size="25.0" />
+      </font>
+   </Label>
+   <Label layoutX="14.0" layoutY="95.0" text="login:">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Label layoutX="14.0" layoutY="160.0" text="password:">
+      <font>
+         <Font size="24.0" />
       </font>
    </Label>
 </AnchorPane>

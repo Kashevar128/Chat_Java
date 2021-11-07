@@ -3,6 +3,7 @@ package gui;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import clientlogic.Client;
@@ -14,7 +15,7 @@ public class ClientGuiController {
     @FXML
     public ListView<HBox> output;
     @FXML
-    public TextField input;
+    public TextArea input;
     public TextField search;
 
     private Client client;

@@ -4,10 +4,21 @@ import gui.ClientGuiController;
 import ru.net.network.*;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static final String IP_ADDR = "192.168.0.104";// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
+    private static String IP_ADDR = null;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
+
+    static {
+        try {
+            IP_ADDR = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final int PORT = 8189; // Переменная с портом
 
     private ClientGuiController controller;
@@ -15,9 +26,9 @@ public class Client implements TCPConnectionListener { // делаем насл�
     private String loginUser;
     private ID id_user;
 
-    public Client(ClientGuiController controller, String login) throws IOException {
+    public Client(ClientGuiController controller, String name) throws IOException {
         this.controller = controller;
-        loginUser = login;
+        loginUser = name;
 
         try { // Блок для обхода исключений
             connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
@@ -25,6 +36,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
             e.printStackTrace();
         }
         id_user = new ID(connection.getSocket().getLocalAddress().toString(), connection.getSocket().getLocalPort());
+        System.out.println(IP_ADDR);
     }
 
     public TCPConnection getConnection() {
@@ -53,7 +65,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onSendPackage(TCPConnection tcpConnection, String msg) {
-        Message pack = new Message(msg, loginUser, TypeMessage.VERBAL_MESSAGE, id_user);
+        Message pack = new Message(msg, loginUser, id_user);
         connection.sendMessage(pack);
     }
 

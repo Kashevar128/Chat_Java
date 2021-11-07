@@ -2,20 +2,26 @@ package ru.net.network;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public class Message<T> implements Serializable {
 
     private TypeMessage typeMessage;
     private String nameUser;
     private String stringValue;
     private boolean inOrOut;
     private ID id;
+    private T obj;
 
-    public Message(String stringValue, String nameUser, TypeMessage typeMessage, ID id) {
+    public Message(String stringValue, String nameUser, ID id) {
+        this.typeMessage = TypeMessage.VERBAL_MESSAGE;
         this.id = id;
-        this.typeMessage = typeMessage;
         this.nameUser = nameUser;
         this.stringValue = "[" + nameUser + "] " + stringValue;
         this.inOrOut = true;
+    }
+
+    public Message(T obj) {
+        this.typeMessage = TypeMessage.SERVICE_MESSAGE;
+        this.obj = obj;
     }
 
     public ID getId() {
