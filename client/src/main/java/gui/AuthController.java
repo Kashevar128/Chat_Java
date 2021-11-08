@@ -16,7 +16,8 @@ public class AuthController {
                 .auth(login.getText(), password.getText());
         if (auth) {
             login.getScene().getWindow().hide();
-            new ClientGui(login.getText());
+            //new ClientGui(login.getText());
+            new ClientGui();
         } else {
             login.setText("WRONG LOGIN OR PASSWORD");
             password.clear();

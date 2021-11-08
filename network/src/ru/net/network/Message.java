@@ -19,8 +19,8 @@ public class Message<T> implements Serializable {
         this.inOrOut = true;
     }
 
-    public Message(T obj) {
-        this.typeMessage = TypeMessage.SERVICE_MESSAGE;
+    public Message(T obj, TypeMessage typeMessage) {
+        this.typeMessage = typeMessage;
         this.obj = obj;
     }
 
@@ -44,4 +44,11 @@ public class Message<T> implements Serializable {
         return stringValue;
     }
 
+    public TypeMessage getTypeMessage() {
+        return typeMessage;
+    }
+
+    public T getObj() {
+        return obj;
+    }
 }

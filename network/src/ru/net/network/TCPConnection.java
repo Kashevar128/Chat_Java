@@ -10,8 +10,9 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
     private final TCPConnectionListener eventListener; // Экземпляр интерфейса для доступа к его методам - событиям
     private final ObjectOutputStream outObj;
     private final ObjectInputStream inObj;
+    private String name = null;
 
-    public TCPConnection (TCPConnectionListener eventListener, String ipAdd, int port) throws IOException {
+    public TCPConnection (String ipAdd, int port, TCPConnectionListener eventListener) throws IOException {
         this (new Socket(ipAdd, port), eventListener); // Создаем конструктор для нового сокета, использует ссылку на второй конструктор
     }
 
@@ -25,11 +26,6 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
                 eventListener.onConnectionReady(TCPConnection.this); //Событие - установление связи, передаем экземпляр сообщения
                 while (!readThread.isInterrupted()) { // Цикл работает, пока не прервется поток чтения
                     Message msg = (Message) inObj.readObject(); // Читаем из обработанного потока сообщение в переменную msg
-                    if (msg.getStringValue().equals("/close " + TCPConnection.this)) {
-                        eventListener.onDisconnect(TCPConnection.this);
-                        disconnect();
-                        break;
-                    }
                     eventListener.onReceivePackage(TCPConnection.this, msg); // Вызываем событие - получение сообщения, передаем экземпляр подключения и само сообщение
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -71,4 +67,11 @@ public class TCPConnection {   // Класс, инкапсулирующий в 
         return "TCPConnection: " + socket.getInetAddress() + ": " + socket.getPort(); // Вывод в консоль адреса машины сервера и порта, который он занял
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

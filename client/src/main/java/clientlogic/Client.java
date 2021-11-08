@@ -31,7 +31,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
         loginUser = name;
 
         try { // Блок для обхода исключений
-            connection = new TCPConnection(this, IP_ADDR, PORT); // Создаем TCP - соединение
+            connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,6 +46,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         System.out.println("Connection ready...");
+        Message <String> pack = new Message<>(loginUser, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
+        connection.sendMessage(pack);
     }
 
     @Override
@@ -67,6 +69,11 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public void onSendPackage(TCPConnection tcpConnection, String msg) {
         Message pack = new Message(msg, loginUser, id_user);
         connection.sendMessage(pack);
+    }
+
+    @Override
+    public void messageHandler(Message msg, TypeMessage typeMessage) {
+
     }
 
 }

@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import static ru.net.network.TypeMessage.*;
+
 public class ChatServer extends JFrame implements TCPConnectionListener, ActionListener { //Создаем класс ChatServer реализуем интерфейс для переопределения его методов
 
     public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
-    private TCPConnection connection;
+    private TCPConnection connection = null;
     private static final String NAME_SERVER = "Admin";
     private ID id_admin;
 
@@ -58,14 +60,9 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         String IP_tcp;
         int port_tcp;
         for (TCPConnection tcpConnection : connections) {
-            IP_tcp = tcpConnection.getSocket().getInetAddress().toString();
-            port_tcp = tcpConnection.getSocket().getPort();// Проходимся переменной по всей коллекции
-            if(msg.getId().getIP_user().equals(IP_tcp) && msg.getId().getPort_user() == port_tcp) {
+            if (msg.getNameUser().equals(tcpConnection.getName())) {
                 msg.setInOrOut(false);
-            }
-            else msg.setInOrOut(true);
-            System.out.println(tcpConnection.getSocket().getInetAddress());
-            System.out.println(tcpConnection.getSocket().getPort());
+            } else msg.setInOrOut(true);
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
         }
     }
@@ -85,8 +82,8 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     @Override
     public synchronized void onReceivePackage(TCPConnection tcpConnection, Message msg) {
-        sendToAllConnections(msg);
-        printMsg(msg.getStringValue());
+        messageHandler(msg, msg.getTypeMessage());
+        System.out.println(tcpConnection.getName());
     }
 
     @Override
@@ -102,7 +99,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     @Override
     public void onSendPackage(TCPConnection tcpConnection, String stringMsg) {
-        if(stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
+        if (stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
         Message pack = new Message(stringMsg, NAME_SERVER, id_admin);
@@ -110,7 +107,24 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     }
 
     @Override
+    public void messageHandler(Message msg, TypeMessage typeMessage) {
+        switch (typeMessage) {
+            case VERBAL_MESSAGE:
+                sendToAllConnections(msg);
+                printMsg(msg.getStringValue());
+                break;
+            case SERVICE_MESSAGE_ADD_NAME:
+                connection.setName((String) msg.getObj());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + typeMessage);
+        }
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         onSendPackage(connection, fieldInput.getText());
     }
+
+
 }

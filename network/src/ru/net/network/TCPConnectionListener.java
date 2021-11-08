@@ -7,5 +7,6 @@ public interface TCPConnectionListener {
     void onDisconnect (TCPConnection tcpConnection);
     void onException (TCPConnection tcpConnection, Exception e);
     void onSendPackage (TCPConnection tcpConnection, String msg);
+    void messageHandler(Message msg, TypeMessage typeMessage);
 
 }
