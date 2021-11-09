@@ -1,6 +1,7 @@
 package gui;
 
 import clientlogic.Client;
+import clientlogic.TestDataBase;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +20,6 @@ public class ClientGui extends Application {
     private ClientGuiController controller;
     private Client client;
     private String nameUser;
-
-    private static int index;
-    private List<String> users;
 
 //    public ClientGui(String name) throws Exception {
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatWork.fxml"));
@@ -56,27 +54,18 @@ public class ClientGui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        users = new ArrayList<>();
-        users.add("Слава");
-        users.add("Сергей");
-        users.add("Егор");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatWork.fxml"));
         Parent chat = loader.load();
         controller = loader.getController();
-        try {
-            nameUser = users.get(index);
-            index++;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Нет столько пользователей: " + index);
-        }
 
         stage = new Stage();
         stage.setTitle("Сетевой чат");
         stage.setScene(new Scene(chat));
         stage.setResizable(false);
         stage.show();
+
+        nameUser = TestDataBase.getInstance().getName();
 
         client = new Client(controller, nameUser);
         controller.setClient(client);
