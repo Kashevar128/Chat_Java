@@ -10,25 +10,31 @@ public class DataBase implements AuthService {
 
     public DataBase() throws Exception {
         createTable();
-        instance = this;
     }
 
-    public static DataBase getInstance() throws Exception {
+    public static void main(String[] args) throws Exception {
+        resultSet();
+    }
+
+    public static synchronized DataBase getInstance() throws Exception {
         if(instance == null) instance = new DataBase();
         return instance;
     }
 
     private static void init() throws ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
+      //  Class.forName("com.mysql.cj.jdbc.Driver");
+        Class.forName("org.h2.Driver");
     }
 
 
     public static Connection getConnection() throws SQLException {
         @Language("SQL")
-        String url = "jdbc:mysql://localhost:3306/test";
+        String urlMySql = "jdbc:mysql://localhost:3306/test";
+        String urlH2 = "jdbc:h2:./client/src/main/resources/db/demodb";
         String user = "root";
         String pass = "root";
-        return DriverManager.getConnection(url, user, pass);
+       // return DriverManager.getConnection(urlMySql, user, pass);
+        return DriverManager.getConnection(urlH2, "", "");
     }
 
     private static void createTable() throws Exception {

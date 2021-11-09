@@ -19,26 +19,26 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGuiController">
    <left>
        <HBox prefHeight="702.0" prefWidth="373.0" BorderPane.alignment="CENTER">
-           <VBox alignment="CENTER" prefHeight="702.0" prefWidth="81.0" styleClass="dark-gray-background" stylesheets="@values/style.css">
+           <VBox alignment="CENTER" prefHeight="702.0" prefWidth="81.0" styleClass="dark-gray-background" stylesheets="@../values/style.css">
                <Pane prefHeight="308.0" prefWidth="91.0" />
                <ImageView fitHeight="55.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                   <Image url="@img/chat_bubble_48px.png" />
+                   <Image url="@../img/chat_bubble_48px.png" />
                </ImageView>
                <ImageView fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                    <VBox.margin>
                        <Insets top="50.0" />
                    </VBox.margin>
-                   <Image url="@img/settings_48px.png" />
+                   <Image url="@../img/settings_48px.png" />
                </ImageView>
                <Pane prefHeight="450.0" prefWidth="200.0" />
                <ImageView fitHeight="55.0" fitWidth="55.0" opacity="0.27" pickOnBounds="true" preserveRatio="true">
                    <VBox.margin>
                        <Insets bottom="20.0" />
                    </VBox.margin>
-                   <Image url="@img/exit_icon_143020.png" />
+                   <Image url="@../img/exit_icon_143020.png" />
                </ImageView>
            </VBox>
-           <VBox prefHeight="702.0" prefWidth="299.0" styleClass="gray-background-color" stylesheets="@values/style.css">
+           <VBox prefHeight="702.0" prefWidth="299.0" styleClass="gray-background-color" stylesheets="@../values/style.css">
                <HBox alignment="CENTER" prefHeight="37.0" prefWidth="269.0">
                    <opaqueInsets>
                        <Insets />
@@ -54,7 +54,7 @@
                        <HBox.margin>
                            <Insets left="15.0" />
                        </HBox.margin>
-                       <Image url="@img/search_104498.png" />
+                       <Image url="@../img/search_104498.png" />
                    </ImageView>
                    <TextField fx:id="search" prefHeight="25.0" prefWidth="174.0" styleClass="transparent-background">
                        <HBox.margin>
@@ -65,7 +65,7 @@
                        </font>
                    </TextField>
                </HBox>
-               <Pane prefHeight="3.0" prefWidth="15.0" styleClass="dark-gray-background" stylesheets="@values/style.css">
+               <Pane prefHeight="3.0" prefWidth="15.0" styleClass="dark-gray-background" stylesheets="@../values/style.css">
                    <VBox.margin>
                        <Insets top="20.0" />
                    </VBox.margin>
@@ -81,7 +81,7 @@
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin>
-                       <Image url="@img/face_human_blank_user_avatar_mannequin_dummy_icon-icons.com_55975.png" />
+                       <Image url="@../img/face_human_blank_user_avatar_mannequin_dummy_icon-icons.com_55975.png" />
                    </ImageView>
                    <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
                        <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="172.0">
@@ -115,7 +115,7 @@
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin>
-                       <Image url="@img/1206_oooo.plus.png" />
+                       <Image url="@../img/1206_oooo.plus.png" />
                    </ImageView>
                    <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
                        <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="176.0">
@@ -157,7 +157,7 @@
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin>
-                       <Image url="@img/1223_oooo.plus.png" />
+                       <Image url="@../img/1223_oooo.plus.png" />
                    </ImageView>
                    <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
                        <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="176.0">
@@ -191,7 +191,7 @@
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin>
-                       <Image url="@img/544_oooo.plus.png" />
+                       <Image url="@../img/544_oooo.plus.png" />
                    </ImageView>
                    <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
                        <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="176.0">
@@ -225,7 +225,7 @@
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin>
-                       <Image url="@img/1010_oooo.plus.png" />
+                       <Image url="@../img/1010_oooo.plus.png" />
                    </ImageView>
                    <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
                        <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="176.0">
@@ -259,7 +259,7 @@
                        <HBox.margin>
                            <Insets left="20.0" />
                        </HBox.margin>
-                       <Image url="@img/face_human_blank_user_avatar_mannequin_dummy_icon-icons.com_55975.png" />
+                       <Image url="@../img/face_human_blank_user_avatar_mannequin_dummy_icon-icons.com_55975.png" />
                    </ImageView>
                    <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
                        <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="176.0">
@@ -310,16 +310,16 @@
                    </HBox.margin>
                </Label>
            </HBox>
-         <ListView fx:id="output" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="594.0" prefWidth="629.0" styleClass="ring-color" stylesheets="@values/style.css" />
+         <ListView fx:id="output" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="594.0" prefWidth="629.0" styleClass="ring-color" stylesheets="@../values/style.css" />
            <HBox alignment="CENTER_LEFT" prefHeight="86.0" prefWidth="629.0">
                <ImageView fitHeight="55.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                    <HBox.margin>
                        <Insets right="10.0" />
                    </HBox.margin>
-                   <Image url="@img/attach_50px.png" />
+                   <Image url="@../img/attach_50px.png" />
                </ImageView>
                <ImageView fitHeight="55.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                   <Image url="@img/comedy_48px.png" />
+                   <Image url="@../img/comedy_48px.png" />
                <HBox.margin>
                   <Insets right="20.0" />
                </HBox.margin>
@@ -329,10 +329,10 @@
                   <Font size="18.0" />
                </font>
             </TextArea>
-            <Button mnemonicParsing="false" onAction="#msgProcessing" prefHeight="73.0" prefWidth="71.0" styleClass="ring-color" stylesheets="@values/style.css">
+            <Button mnemonicParsing="false" onAction="#msgProcessing" prefHeight="73.0" prefWidth="71.0" styleClass="ring-color" stylesheets="@../values/style.css">
                <graphic>
                      <ImageView fitHeight="46.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
-                         <Image url="@img/paper_plane_48px.png" />
+                         <Image url="@../img/paper_plane_48px.png" />
                      </ImageView>
                </graphic>
             </Button>

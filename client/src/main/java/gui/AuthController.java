@@ -3,9 +3,6 @@ package gui;
 import clientlogic.DataBase;
 import javafx.scene.control.TextField;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 public class AuthController {
 
     public TextField login;
@@ -16,8 +13,7 @@ public class AuthController {
                 .auth(login.getText(), password.getText());
         if (auth) {
             login.getScene().getWindow().hide();
-            //new ClientGui(login.getText());
-            new ClientGui();
+            new ClientGui(login.getText());
         } else {
             login.setText("WRONG LOGIN OR PASSWORD");
             password.clear();

@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class AuthGui extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent auth = FXMLLoader.load(getClass().getResource("/auth.fxml"));
+        Parent auth = FXMLLoader.load(getClass().getResource("/fxml/auth.fxml"));
         primaryStage.setTitle("Авторизация");
         primaryStage.setScene(new Scene(auth));
         primaryStage.setResizable(false);
