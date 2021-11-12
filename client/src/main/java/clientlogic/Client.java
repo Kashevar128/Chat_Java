@@ -29,6 +29,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public Client(ClientGuiController controller, String name) throws IOException {
         this.controller = controller;
         loginUser = name;
+        controller.name.setText(loginUser);
 
         try { // Блок для обхода исключений
             connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение

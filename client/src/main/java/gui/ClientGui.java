@@ -1,6 +1,7 @@
 package gui;
 
 import clientlogic.Client;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,8 +31,6 @@ public class ClientGui {
         client = new Client(controller, nameUser);
         controller.setClient(client);
 
-
-
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -44,7 +43,5 @@ public class ClientGui {
             }
         });
     }
-
-
 
 }

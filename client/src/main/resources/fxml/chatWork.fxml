@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="1002.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGuiController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="622.0" prefWidth="899.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGuiController">
    <left>
        <HBox prefHeight="702.0" prefWidth="373.0" BorderPane.alignment="CENTER">
            <VBox alignment="CENTER" prefHeight="702.0" prefWidth="81.0" styleClass="dark-gray-background" stylesheets="@../values/style.css">
@@ -38,7 +38,7 @@
                    <Image url="@../img/exit_icon_143020.png" />
                </ImageView>
            </VBox>
-           <VBox prefHeight="702.0" prefWidth="299.0" styleClass="gray-background-color" stylesheets="@../values/style.css">
+           <VBox prefHeight="594.0" prefWidth="294.0" styleClass="gray-background-color" stylesheets="@../values/style.css">
                <HBox alignment="CENTER" prefHeight="37.0" prefWidth="269.0">
                    <opaqueInsets>
                        <Insets />
@@ -248,39 +248,14 @@
                        </VBox>
                    </HBox>
                </HBox>
-               <HBox prefHeight="66.0" prefWidth="269.0">
+               <HBox prefHeight="24.0" prefWidth="294.0">
                    <opaqueInsets>
                        <Insets />
                    </opaqueInsets>
                    <VBox.margin>
                        <Insets top="30.0" />
                    </VBox.margin>
-                   <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                       <HBox.margin>
-                           <Insets left="20.0" />
-                       </HBox.margin>
-                       <Image url="@../img/face_human_blank_user_avatar_mannequin_dummy_icon-icons.com_55975.png" />
-                   </ImageView>
-                   <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0">
-                       <VBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="176.0">
-                           <padding>
-                               <Insets left="10.0" />
-                           </padding>
-                           <Label prefHeight="17.0" prefWidth="79.0" text="Mark" textFill="WHITE">
-                               <font>
-                                   <Font name="Lucida Sans Italic" size="15.0" />
-                               </font>
-                               <VBox.margin>
-                                   <Insets top="5.0" />
-                               </VBox.margin>
-                           </Label>
-                           <Label prefHeight="17.0" prefWidth="79.0" text="Wow, Great!" textFill="#9da7a7">
-                               <font>
-                                   <Font name="Ebrima" size="14.0" />
-                               </font>
-                           </Label>
-                       </VBox>
-                   </HBox>
+                   <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="184.0" />
                </HBox>
            </VBox>
        </HBox>
@@ -288,30 +263,21 @@
    <center>
        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
            <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="635.0">
-               <Label prefHeight="28.0" prefWidth="96.0" text="Human" textFill="#000000b2">
-                   <font>
-                       <Font name="Lucida Sans Demibold Italic" size="24.0" />
-                   </font>
-                   <HBox.margin>
-                       <Insets left="20.0" />
-                   </HBox.margin>
-               </Label>
-               <Circle fill="#3ba58b" radius="4.0" stroke="BLACK" strokeType="INSIDE">
-                   <HBox.margin>
-                       <Insets left="5.0" />
-                   </HBox.margin>
-               </Circle>
+            <Label fx:id="name" prefHeight="17.0" prefWidth="306.0" text="яяяяяяяяяя" />
                <Label prefHeight="28.0" prefWidth="70.0" text="Online" textFill="#00000087">
                    <font>
                        <Font name="Ebrima Bold" size="14.0" />
                    </font>
                    <HBox.margin>
-                       <Insets left="5.0" />
+                       <Insets />
                    </HBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
                </Label>
            </HBox>
-         <ListView fx:id="output" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="594.0" prefWidth="629.0" styleClass="ring-color" stylesheets="@../values/style.css" />
-           <HBox alignment="CENTER_LEFT" prefHeight="86.0" prefWidth="629.0">
+         <ListView fx:id="output" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="514.0" prefWidth="526.0" styleClass="ring-color" stylesheets="@../values/style.css" />
+           <HBox alignment="CENTER_LEFT" prefHeight="81.0" prefWidth="526.0">
                <ImageView fitHeight="55.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                    <HBox.margin>
                        <Insets right="10.0" />
