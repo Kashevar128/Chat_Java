@@ -8,12 +8,10 @@ public class Message<T> implements Serializable {
     private String nameUser;
     private String stringValue;
     private boolean inOrOut;
-    private ID id;
     private T obj;
 
-    public Message(String stringValue, String nameUser, ID id) {
+    public Message(String stringValue, String nameUser) {
         this.typeMessage = TypeMessage.VERBAL_MESSAGE;
-        this.id = id;
         this.nameUser = nameUser;
         this.stringValue = "[" + nameUser + "] " + stringValue;
         this.inOrOut = true;
@@ -22,10 +20,6 @@ public class Message<T> implements Serializable {
     public Message(T obj, TypeMessage typeMessage) {
         this.typeMessage = typeMessage;
         this.obj = obj;
-    }
-
-    public ID getId() {
-        return id;
     }
 
     public boolean isInOrOut() {

@@ -6,6 +6,7 @@ import ru.net.network.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
@@ -24,7 +25,6 @@ public class Client implements TCPConnectionListener { // делаем насл�
     private ClientGuiController controller;
     private TCPConnection connection; // Поле для экземпляра канала
     private String loginUser;
-    private ID id_user;
 
     public Client(ClientGuiController controller, String name) throws IOException {
         this.controller = controller;
@@ -36,7 +36,6 @@ public class Client implements TCPConnectionListener { // делаем насл�
         } catch (IOException e) {
             e.printStackTrace();
         }
-        id_user = new ID(connection.getSocket().getLocalAddress().toString(), connection.getSocket().getLocalPort());
         System.out.println(IP_ADDR);
     }
 
@@ -47,13 +46,13 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         System.out.println("Connection ready...");
-        Message <String> pack = new Message<>(loginUser, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
+        Message<String> pack = new Message<>(loginUser, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
         connection.sendMessage(pack);
     }
 
     @Override
     public void onReceivePackage(TCPConnection tcpConnection, Message msg) {
-        controller.print(msg);
+        messageHandler(msg, msg.getTypeMessage());
     }
 
     @Override
@@ -68,13 +67,19 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onSendPackage(TCPConnection tcpConnection, String msg) {
-        Message pack = new Message(msg, loginUser, id_user);
+        Message pack = new Message(msg, loginUser);
         connection.sendMessage(pack);
     }
 
     @Override
     public void messageHandler(Message msg, TypeMessage typeMessage) {
-
+        switch (typeMessage) {
+            case VERBAL_MESSAGE:
+                controller.print(msg);
+                break;
+            case SERVICE_MESSAGE_UPDATE_LIST_USERS:
+                controller.print((TCPConnection) msg.getObj());
+        }
     }
 
 }

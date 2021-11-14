@@ -14,8 +14,8 @@ public class HBoxChat extends HBox {
     private Label label;
 
     public HBoxChat(String text, boolean inOrOut) {
-        photo = getPhoto(true);
-        label = getLabel(inOrOut, text);
+        this.photo = getPhoto(true);
+        this.label = getDialogLabel(inOrOut, text);
         if(inOrOut) {
             this.setAlignment(Pos.CENTER_LEFT);
             this.getChildren().addAll(photo, label);
@@ -31,8 +31,23 @@ public class HBoxChat extends HBox {
 
     }
 
+    public HBoxChat(String name) {
+        this.photo = getPhoto(false);
+        this.label = getListUsersLabel(name);
+        this.setAlignment(Pos.CENTER_LEFT);
+        this.getChildren().addAll(photo, label);
+    }
 
-    Label getLabel(boolean inOrOut, String text) {
+    Label getListUsersLabel(String name) {
+        label = new Label(name);
+        label.setFont(new Font("Arial", 16));
+        label.setMaxWidth(200);
+        label.setWrapText(true);
+
+        return label;
+    }
+
+    Label getDialogLabel(boolean inOrOut, String text) {
         String stylesInGoingLabel = "-fx-background-color: #D3EEDF;" +
                 "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
 

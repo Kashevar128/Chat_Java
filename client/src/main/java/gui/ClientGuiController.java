@@ -11,16 +11,18 @@ import clientlogic.Client;
 
 
 import ru.net.network.Message;
+import ru.net.network.TCPConnection;
+import ru.net.network.TypeMessage;
+
+import java.util.ArrayList;
 
 public class ClientGuiController {
     @FXML
     public ListView<HBox> output;
-    @FXML
     public TextArea input;
-    @FXML
     public TextField search;
-    @FXML
     public Label name;
+    public ListView listUsers;
 
     private Client client;
 
@@ -56,6 +58,13 @@ public class ClientGuiController {
         Boolean inOrOut = msg.isInOrOut();
         Platform.runLater(() ->
                 output.getItems().add(new HBoxChat(text, inOrOut))
+        );
+    }
+
+    public void print(TCPConnection connection) {
+        String name =  connection.getName();
+        Platform.runLater(() ->
+                listUsers.getItems().add(new HBoxChat(name))
         );
     }
 }

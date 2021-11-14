@@ -26,7 +26,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
     private TCPConnection connection = null;
     private static final String NAME_SERVER = "Admin";
-    private ID id_admin;
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -52,13 +51,10 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         } catch (IOException e) {
             printMsg("Client kicked");
         }
-        id_admin = new ID(connection.getSocket().getLocalAddress().toString(), connection.getSocket().getLocalPort());
 
     }
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
-        String IP_tcp;
-        int port_tcp;
         for (TCPConnection tcpConnection : connections) {
             if (msg.getNameUser().equals(tcpConnection.getName())) {
                 msg.setInOrOut(false);
@@ -77,6 +73,8 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     @Override
     public synchronized void onConnectionReady(TCPConnection tcpConnection) { //Синхронизируем все методы tcpConnection, т.к. одними и теми же методами могут пользоваться несколько потоков
         connections.add(tcpConnection); // Добавляем в коллекцию соединений новое соединение
+        Message message = new Message(tcpConnection, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+        sendToAllConnections(message);
         printMsg("Client connected: " + tcpConnection); // Делаем рассылку все подключенным пользователям о создании нового соединения с клиентом
     }
 
@@ -102,7 +100,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         if (stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
-        Message pack = new Message(stringMsg, NAME_SERVER, id_admin);
+        Message pack = new Message(stringMsg, NAME_SERVER);
         sendToAllConnections(pack); // Рассылка сообщений клиентам
     }
 

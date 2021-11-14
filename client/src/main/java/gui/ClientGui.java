@@ -26,6 +26,7 @@ public class ClientGui {
         stage.setTitle("Сетевой чат");
         stage.setScene(new Scene(chat));
         stage.setResizable(false);
+        controller.input.setWrapText(true);
         stage.show();
 
         client = new Client(controller, nameUser);
