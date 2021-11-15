@@ -21,6 +21,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int WIDTH = 600; // Переменная с шириной окна
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
+    private final ArrayList<String> usersNames = new ArrayList<>();
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
@@ -56,9 +57,11 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) {
-            if (msg.getNameUser().equals(tcpConnection.getName())) {
-                msg.setInOrOut(false);
-            } else msg.setInOrOut(true);
+            if (msg.getNameUser()!=null && tcpConnection.getName() != null) {
+                if (msg.getNameUser().equals(tcpConnection.getName())) {
+                    msg.setInOrOut(false);
+                } else msg.setInOrOut(true);
+            }
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
         }
     }
@@ -73,8 +76,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     @Override
     public synchronized void onConnectionReady(TCPConnection tcpConnection) { //Синхронизируем все методы tcpConnection, т.к. одними и теми же методами могут пользоваться несколько потоков
         connections.add(tcpConnection); // Добавляем в коллекцию соединений новое соединение
-        Message message = new Message(tcpConnection, SERVICE_MESSAGE_UPDATE_LIST_USERS);
-        sendToAllConnections(message);
         printMsg("Client connected: " + tcpConnection); // Делаем рассылку все подключенным пользователям о создании нового соединения с клиентом
     }
 
@@ -112,7 +113,11 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                 printMsg(msg.getStringValue());
                 break;
             case SERVICE_MESSAGE_ADD_NAME:
-                connection.setName((String) msg.getObj());
+                String nameUser = (String) msg.getObj();
+                connection.setName(nameUser);
+                usersNames.add(nameUser);
+                Message messageUpdateList = new Message(usersNames, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+                sendToAllConnections(messageUpdateList);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + typeMessage);

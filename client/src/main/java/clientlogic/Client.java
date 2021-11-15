@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
     private static String IP_ADDR = null;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
+    private ArrayList<String> userList = null;
 
     static {
         try {
@@ -78,8 +79,16 @@ public class Client implements TCPConnectionListener { // делаем насл�
                 controller.print(msg);
                 break;
             case SERVICE_MESSAGE_UPDATE_LIST_USERS:
-                controller.print((TCPConnection) msg.getObj());
+                userList = (ArrayList<String>) msg.getObj();
+                controller.printListUsers();
         }
     }
 
+    public String getLoginUser() {
+        return loginUser;
+    }
+
+    public ArrayList<String> getUserList() {
+        return userList;
+    }
 }

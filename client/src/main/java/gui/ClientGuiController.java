@@ -61,10 +61,15 @@ public class ClientGuiController {
         );
     }
 
-    public void print(TCPConnection connection) {
-        String name =  connection.getName();
+    public void printListUsers() {
+        ArrayList<HBoxChat>hBoxChats = new ArrayList<>();
+        for(String userName: client.getUserList()) {
+            if(!userName.equals(client.getLoginUser())) {
+                hBoxChats.add(new HBoxChat(userName));
+            }
+        }
         Platform.runLater(() ->
-                listUsers.getItems().add(new HBoxChat(name))
+                listUsers.getItems().addAll(hBoxChats)
         );
     }
 }

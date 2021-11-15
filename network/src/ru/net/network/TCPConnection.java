@@ -3,7 +3,7 @@ package ru.net.network;
 import java.io.*;
 import java.net.Socket;
 
-public class TCPConnection {   // Класс, инкапсулирующий в себе логику интернет - соединения
+public class TCPConnection{   // Класс, инкапсулирующий в себе логику интернет - соединения
 
     private final Socket socket; // Поле сокета
     private Thread readThread; // Поток чтения сообщений, не финал, так как состояние потока может изменится - он может оказаться прерванным
