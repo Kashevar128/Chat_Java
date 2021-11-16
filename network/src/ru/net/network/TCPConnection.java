@@ -2,6 +2,7 @@ package ru.net.network;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class TCPConnection{   // Класс, инкапсулирующий в себе логику интернет - соединения
 
@@ -44,6 +45,9 @@ public class TCPConnection{   // Класс, инкапсулирующий в �
 
     public synchronized void sendMessage (Message msg) { // Метод для отправки сообщений
         try {
+            if(msg.getTypeMessage().equals(TypeMessage.SERVICE_MESSAGE_UPDATE_LIST_USERS)) {
+                outObj.reset();
+            }
             outObj.writeObject(msg); // Пишем в поток, \r - перевод каретки на начало строки для корректной работы с программой Putty, \n - перенос каретки на следующую строку
             outObj.flush(); // Сбрасываем написанное в буфере в поток, если вдруг сообщение застряло в буфере и не передалось по сети
         } catch (IOException e) {

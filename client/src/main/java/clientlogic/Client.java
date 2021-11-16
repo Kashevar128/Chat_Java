@@ -1,5 +1,6 @@
 package clientlogic;
 
+import gui.Avatar;
 import gui.ClientGuiController;
 import ru.net.network.*;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
     private static String IP_ADDR = null;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
-    private ArrayList<String> userList = null;
+    private ArrayList<String> userListString = null;
 
     static {
         try {
@@ -31,6 +32,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
         this.controller = controller;
         loginUser = name;
         controller.name.setText(loginUser);
+        Avatar.createAvatar(loginUser);
 
         try { // Блок для обхода исключений
             connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение
@@ -54,6 +56,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onReceivePackage(TCPConnection tcpConnection, Message msg) {
         messageHandler(msg, msg.getTypeMessage());
+        if(msg.getTypeMessage().equals(TypeMessage.SERVICE_MESSAGE_UPDATE_LIST_USERS)) System.out.println(msg.getObj().toString());
     }
 
     @Override
@@ -79,8 +82,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
                 controller.print(msg);
                 break;
             case SERVICE_MESSAGE_UPDATE_LIST_USERS:
-                userList = (ArrayList<String>) msg.getObj();
-                controller.printListUsers();
+                userListString = (ArrayList<String>) msg.getObj();
+                controller.printListUsers(userListString);
         }
     }
 
@@ -88,7 +91,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
         return loginUser;
     }
 
-    public ArrayList<String> getUserList() {
-        return userList;
+    public ArrayList<String> getUserListString() {
+        return userListString;
     }
 }

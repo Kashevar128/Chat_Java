@@ -1,6 +1,7 @@
 package avatar;
 
 import java.io.IOException;
+import java.util.Base64;
 
 public class Main {
     public static void main(String[] args) {

@@ -57,12 +57,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) {
-            if (msg.getNameUser()!=null && tcpConnection.getName() != null) {
+            if (msg.getTypeMessage().equals(VERBAL_MESSAGE)) {
                 if (msg.getNameUser().equals(tcpConnection.getName())) {
                     msg.setInOrOut(false);
                 } else msg.setInOrOut(true);
             }
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
+            if(msg.getTypeMessage().equals(SERVICE_MESSAGE_UPDATE_LIST_USERS)) System.out.println(msg.getObj().toString());
         }
     }
 

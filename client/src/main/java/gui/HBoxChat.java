@@ -66,13 +66,10 @@ public class HBoxChat extends HBox {
         return label;
     }
 
-    ImageView getPhoto(boolean inOrOut) {
-        String image01 = "img/544_oooo.plus.png";
-        String image02 = "img/1223_oooo.plus.png";
-        String value = null;
-        if (inOrOut) value = image01;
-        if (!inOrOut) value = image02;
-
+    ImageView getPhoto() {
+        StringBuilder value = new StringBuilder();
+        value.append("client\\src\\main\\resources\\img\\");
+        value.append();
         Image image = new Image(String.valueOf(getClass().getClassLoader().getResource(value)));
         ImageView profileImage = new ImageView(image);
         profileImage.setFitHeight(60);

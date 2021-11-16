@@ -45,4 +45,7 @@ public class ClientGui {
         });
     }
 
+    public String getNameUser() {
+        return nameUser;
+    }
 }

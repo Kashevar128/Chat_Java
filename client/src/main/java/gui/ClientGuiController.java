@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -43,11 +44,11 @@ public class ClientGuiController {
         getClient().onSendPackage(client.getConnection(), msg + "\uD83D\uDE00");
     }
 
-    private static boolean filter (String msg) {
+    private static boolean filter(String msg) {
         boolean flag = true;
         if (msg.equals("")) flag = false;
         for (int i = 0; i < msg.length(); i++) {
-            if(msg.charAt(i) == ' ') flag = false;
+            if (msg.charAt(i) == ' ') flag = false;
         }
         return flag;
     }
@@ -61,15 +62,17 @@ public class ClientGuiController {
         );
     }
 
-    public void printListUsers() {
-        ArrayList<HBoxChat>hBoxChats = new ArrayList<>();
-        for(String userName: client.getUserList()) {
+    public void printListUsers(ArrayList<String> userListString) {
+        ArrayList<HBoxChat> hBoxChats = new ArrayList<>();
+        for (String userName : userListString) {
             if(!userName.equals(client.getLoginUser())) {
                 hBoxChats.add(new HBoxChat(userName));
             }
         }
-        Platform.runLater(() ->
-                listUsers.getItems().addAll(hBoxChats)
-        );
+        Platform.runLater(() -> {
+            listUsers.getItems().clear();
+            listUsers.getItems().addAll(hBoxChats);
+        });
+
     }
 }
