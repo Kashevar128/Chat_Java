@@ -2,24 +2,26 @@ package ru.net.network;
 
 import java.io.Serializable;
 
-public class Message<T> implements Serializable {
+public class Message<T, V> implements Serializable {
 
     private TypeMessage typeMessage;
-    private String nameUser;
+    private ClientProfile profile;
     private String stringValue;
     private boolean inOrOut;
     private T obj;
+    private V obj_2;
 
-    public Message(String stringValue, String nameUser) {
+    public Message(String stringValue, ClientProfile user) {
         this.typeMessage = TypeMessage.VERBAL_MESSAGE;
-        this.nameUser = nameUser;
-        this.stringValue = "[" + nameUser + "] " + stringValue;
+        this.profile = user;
+        this.stringValue = "[" + profile.getNameUser() + "] " + stringValue;
         this.inOrOut = true;
     }
 
-    public Message(T obj, TypeMessage typeMessage) {
+    public Message(T obj, V obj_2, TypeMessage typeMessage) {
         this.typeMessage = typeMessage;
         this.obj = obj;
+        this.obj_2 = obj_2;
     }
 
     public boolean isInOrOut() {
@@ -30,8 +32,8 @@ public class Message<T> implements Serializable {
         this.inOrOut = inOrOut;
     }
 
-    public String getNameUser() {
-        return nameUser;
+    public ClientProfile getProfile() {
+        return profile;
     }
 
     public String getStringValue() {
@@ -42,7 +44,7 @@ public class Message<T> implements Serializable {
         return typeMessage;
     }
 
-    public T getObj() {
+    public T getObjT() {
         return obj;
     }
 }

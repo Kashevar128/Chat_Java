@@ -4,6 +4,7 @@ package gui;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -11,32 +12,13 @@ import java.math.BigInteger;
 import java.util.Base64;
 import java.util.Random;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import ru.net.network.Message;
+
 public class Avatar {
 
-    public Avatar() {
-    }
-
-    // Заголовок кодировки Base64, который можно предварительно просмотреть непосредственно в теге <img /> или в адресной строке браузера
-    private final static String BASE64_PREFIX = "data:image/png;base64,"; //Base64 - формат кодирования двоичных данных при помощи 64 символов.
-
-    /**
-     * Генерация кодировки base64 аватара
-     *
-     * @param id
-     * @return
-     * @throws IOException
-     */
-    private static String createBase64Avatar(int id, String userName) throws IOException { // Переменная id - это hashcode никнейма
-        return new String(Base64.getEncoder().encode(create(id, userName))); // в этой строке возвращаем зашифрованное в Base64 значение изображения
-    }
-
-    /**
-     * Создание аватара на основе идентификатора со случайным цветом. Если используется значение hashCode (), значение может быть отрицательным. Нужно обратить внимание.
-     *
-     * @param id
-     * @return
-     * @throws IOException
-     */
     private static byte[] create(int id, String userName) throws IOException {
         int width = 20;
         int grid = 5;
@@ -60,14 +42,17 @@ public class Avatar {
             }
         }
         _2d.dispose();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(img, "png", byteArrayOutputStream);
+
         StringBuilder path = new StringBuilder();
         path.append("client\\src\\main\\resources\\img\\");
         path.append(userName);
         path.append(".png");
         ImageIO.write(img, "png", new File(path.toString()));
-        return byteArrayOutputStream.toByteArray();
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(img, "png", byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        return bytes;
     }
 
     private static Color randomColor(int fc, int bc) {
@@ -91,14 +76,13 @@ public class Avatar {
         return bi.toString(10).toCharArray();
     }
 
-    public static String createAvatar(String userName) {
-        String avatar = null; //Строковая переменная с аватаром
+    public static byte[] createAvatar(String userName) {
+        byte[] avatar = null;
         try {
-            avatar = createBase64Avatar(Math.abs(userName.hashCode()), userName); // извлекаем из имени профиля hashCode
+            avatar = create(userName.hashCode(), userName); // извлекаем из имени профиля hashCode
         } catch (IOException e) {                                                // на случай, если он получился отрицательным
             e.printStackTrace();                                                   // делаем его по модулю.
         }
-        System.out.println(BASE64_PREFIX + avatar);
-        return BASE64_PREFIX + avatar;
+        return avatar;
     }
 }

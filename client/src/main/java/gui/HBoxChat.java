@@ -7,15 +7,24 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
+import ru.net.network.ClientProfile;
+import ru.net.network.Message;
 
 public class HBoxChat extends HBox {
 
     private ImageView photo;
     private Label label;
+    private String userName;
+    private String stringValue;
+    private boolean inOrOut;
 
-    public HBoxChat(String text, boolean inOrOut) {
-        this.photo = getPhoto(true);
-        this.label = getDialogLabel(inOrOut, text);
+    public HBoxChat(Message message) {
+        this.userName = message.getProfile().getNameUser();
+        this.stringValue = message.getStringValue();
+        this.inOrOut = message.isInOrOut();
+        this.photo = message.getProfile().getAvatar();
+        this.label = getDialogLabel(inOrOut, stringValue);
+
         if(inOrOut) {
             this.setAlignment(Pos.CENTER_LEFT);
             this.getChildren().addAll(photo, label);
@@ -31,9 +40,10 @@ public class HBoxChat extends HBox {
 
     }
 
-    public HBoxChat(String name) {
-        this.photo = getPhoto(false);
-        this.label = getListUsersLabel(name);
+    public HBoxChat(ClientProfile clientProfile) {
+        this.photo = clientProfile.getAvatar();
+        this.userName = clientProfile.getNameUser();
+        this.label = getListUsersLabel(userName);
         this.setAlignment(Pos.CENTER_LEFT);
         this.getChildren().addAll(photo, label);
     }
@@ -66,16 +76,21 @@ public class HBoxChat extends HBox {
         return label;
     }
 
-    ImageView getPhoto() {
-        StringBuilder value = new StringBuilder();
-        value.append("client\\src\\main\\resources\\img\\");
-        value.append();
-        Image image = new Image(String.valueOf(getClass().getClassLoader().getResource(value)));
-        ImageView profileImage = new ImageView(image);
-        profileImage.setFitHeight(60);
-        profileImage.setFitWidth(60);
-        return profileImage;
+    private ImageView decode(byte[] byteAva) {
+
     }
+
+//    ImageView getPhoto(String userName) {
+//        StringBuilder value = new StringBuilder();
+//        value.append("client\\src\\main\\resources\\img\\");
+//        value.append(userName);
+//        value.append(".png");
+//        Image image = new Image(String.valueOf(getClass().getClassLoader().getResource(value.toString())));
+//        ImageView profileImage = new ImageView(image);
+//        profileImage.setFitHeight(60);
+//        profileImage.setFitWidth(60);
+//        return profileImage;
+//    }
 }
 
 

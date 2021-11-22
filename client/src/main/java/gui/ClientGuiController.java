@@ -1,7 +1,6 @@
 package gui;
 
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -11,9 +10,8 @@ import javafx.scene.layout.HBox;
 import clientlogic.Client;
 
 
+import ru.net.network.ClientProfile;
 import ru.net.network.Message;
-import ru.net.network.TCPConnection;
-import ru.net.network.TypeMessage;
 
 import java.util.ArrayList;
 
@@ -55,18 +53,16 @@ public class ClientGuiController {
     //TODO: посмотреть, как можно упростить метод.
 
     public void print(Message msg) {
-        String text = msg.getStringValue();
-        Boolean inOrOut = msg.isInOrOut();
         Platform.runLater(() ->
-                output.getItems().add(new HBoxChat(text, inOrOut))
+                output.getItems().add(new HBoxChat(msg))
         );
     }
 
-    public void printListUsers(ArrayList<String> userListString) {
+    public void printListUsers(ArrayList<ClientProfile> usersList) {
         ArrayList<HBoxChat> hBoxChats = new ArrayList<>();
-        for (String userName : userListString) {
-            if(!userName.equals(client.getLoginUser())) {
-                hBoxChats.add(new HBoxChat(userName));
+        for (ClientProfile userProfile : usersList) {
+            if(!userProfile.equals(client.getMyClientProfile())) {
+                hBoxChats.add(new HBoxChat(userProfile));
             }
         }
         Platform.runLater(() -> {

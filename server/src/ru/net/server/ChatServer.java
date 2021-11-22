@@ -21,12 +21,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int WIDTH = 600; // Переменная с шириной окна
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
-    private final ArrayList<String> usersNames = new ArrayList<>();
+    private final ArrayList<ClientProfile> usersProfiles = new ArrayList<>();
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
     private TCPConnection connection = null;
     private static final String NAME_SERVER = "Admin";
+    private ClientProfile serverProfile;
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -43,6 +44,8 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
         setVisible(true); //Пишем - показать окно
 
+        this.serverProfile = new ClientProfile(NAME_SERVER, null);
+
         printMsg("Server running..."); // Консоль - запуск сервера
         printMsg("You have to wait connection");
         try (ServerSocket serverSocket = new ServerSocket(8189)) { // Создание сервер - сокета на порте 8189, слушающего клиента в try с ресурсами
@@ -58,12 +61,12 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) {
             if (msg.getTypeMessage().equals(VERBAL_MESSAGE)) {
-                if (msg.getNameUser().equals(tcpConnection.getName())) {
+                if (msg.getProfile().equals(tcpConnection.getName())) {
                     msg.setInOrOut(false);
                 } else msg.setInOrOut(true);
             }
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
-            if(msg.getTypeMessage().equals(SERVICE_MESSAGE_UPDATE_LIST_USERS)) System.out.println(msg.getObj().toString());
+            if(msg.getTypeMessage().equals(SERVICE_MESSAGE_UPDATE_LIST_USERS)) System.out.println(msg.getObjT().toString());
         }
     }
 
@@ -102,7 +105,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         if (stringMsg.equals("")) return; // Если переменная равна пустому месту, делаем возврат из метода
         fieldInput.setText(null); // Передаем null в поле ввода сообщения, чтобы очистить его
         printMsg(stringMsg);
-        Message pack = new Message(stringMsg, NAME_SERVER);
+        Message pack = new Message(stringMsg, serverProfile);
         sendToAllConnections(pack); // Рассылка сообщений клиентам
     }
 
@@ -114,10 +117,11 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                 printMsg(msg.getStringValue());
                 break;
             case SERVICE_MESSAGE_ADD_NAME:
-                String nameUser = (String) msg.getObj();
+                ClientProfile clientProfile = (ClientProfile) msg.getObjT();
+                String nameUser = clientProfile.getNameUser();
                 connection.setName(nameUser);
-                usersNames.add(nameUser);
-                Message messageUpdateList = new Message(usersNames, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+                usersProfiles.add(clientProfile);
+                Message messageUpdateList = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
                 sendToAllConnections(messageUpdateList);
                 break;
             default:

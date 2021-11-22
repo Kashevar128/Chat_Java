@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
     private static String IP_ADDR = null;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
-    private ArrayList<String> userListString = null;
+    private ArrayList<ClientProfile> usersList = null;
 
     static {
         try {
@@ -27,12 +27,16 @@ public class Client implements TCPConnectionListener { // делаем насл�
     private ClientGuiController controller;
     private TCPConnection connection; // Поле для экземпляра канала
     private String loginUser;
+    private ClientProfile myClientProfile;
+
+    public ClientProfile getMyClientProfile() {
+        return myClientProfile;
+    }
 
     public Client(ClientGuiController controller, String name) throws IOException {
         this.controller = controller;
         loginUser = name;
-        controller.name.setText(loginUser);
-        Avatar.createAvatar(loginUser);
+        controller.name.setText(name);
 
         try { // Блок для обхода исключений
             connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение
@@ -40,6 +44,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
             e.printStackTrace();
         }
         System.out.println(IP_ADDR);
+        this.myClientProfile = new ClientProfile(loginUser, Avatar.createAvatar(loginUser));
     }
 
     public TCPConnection getConnection() {
@@ -49,14 +54,13 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         System.out.println("Connection ready...");
-        Message<String> pack = new Message<>(loginUser, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
+        Message pack = new Message(loginUser,null, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
         connection.sendMessage(pack);
     }
 
     @Override
     public void onReceivePackage(TCPConnection tcpConnection, Message msg) {
         messageHandler(msg, msg.getTypeMessage());
-        if(msg.getTypeMessage().equals(TypeMessage.SERVICE_MESSAGE_UPDATE_LIST_USERS)) System.out.println(msg.getObj().toString());
     }
 
     @Override
@@ -71,7 +75,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onSendPackage(TCPConnection tcpConnection, String msg) {
-        Message pack = new Message(msg, loginUser);
+        Message pack = new Message(msg, myClientProfile);
         connection.sendMessage(pack);
     }
 
@@ -82,8 +86,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
                 controller.print(msg);
                 break;
             case SERVICE_MESSAGE_UPDATE_LIST_USERS:
-                userListString = (ArrayList<String>) msg.getObj();
-                controller.printListUsers(userListString);
+                usersList = (ArrayList<ClientProfile>) msg.getObjT();
+                controller.printListUsers(getUsersList());
         }
     }
 
@@ -91,7 +95,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
         return loginUser;
     }
 
-    public ArrayList<String> getUserListString() {
-        return userListString;
+    public ArrayList<ClientProfile> getUsersList() {
+        return usersList;
     }
 }
