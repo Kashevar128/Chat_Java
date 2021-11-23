@@ -9,6 +9,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ru.net.network.TCPConnectionListener;
+
+import java.util.EventListener;
 
 
 public class ClientGui {
@@ -30,23 +33,25 @@ public class ClientGui {
         controller.input.setWrapText(true);
         stage.show();
 
-        client = new Client(controller, nameUser);
+        client = new Client(controller, nameUser, this);
         controller.setClient(client);
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                System.out.println("Клиент закрыт");
-                try {
-                    client.getConnection().disconnect();
-                } catch (Exception e) {
-                    System.out.println("Корректное завершение работы клиента");
-                }
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Клиент закрыт");
+            try {
+                client.onDisconnect(client.getConnection());
+                client.getConnection().disconnect();
+            } catch (Exception e) {
+                System.out.println("Корректное завершение работы клиента");
             }
         });
     }
 
     public String getNameUser() {
         return nameUser;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }

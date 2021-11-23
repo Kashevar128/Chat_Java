@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import static ru.net.network.TypeMessage.*;
 
@@ -61,12 +63,11 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) {
             if (msg.getTypeMessage().equals(VERBAL_MESSAGE)) {
-                if (msg.getProfile().equals(tcpConnection.getName())) {
+                if (msg.getProfile().equals(tcpConnection.getClientProfile())) {
                     msg.setInOrOut(false);
                 } else msg.setInOrOut(true);
             }
             tcpConnection.sendMessage(msg); // Вызываем для каждого метод отправки сообщения класса TCPConnection
-            if(msg.getTypeMessage().equals(SERVICE_MESSAGE_UPDATE_LIST_USERS)) System.out.println(msg.getObjT().toString());
         }
     }
 
@@ -81,18 +82,20 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     public synchronized void onConnectionReady(TCPConnection tcpConnection) { //Синхронизируем все методы tcpConnection, т.к. одними и теми же методами могут пользоваться несколько потоков
         connections.add(tcpConnection); // Добавляем в коллекцию соединений новое соединение
         printMsg("Client connected: " + tcpConnection); // Делаем рассылку все подключенным пользователям о создании нового соединения с клиентом
+        printMsg(connections.toString());
     }
 
     @Override
     public synchronized void onReceivePackage(TCPConnection tcpConnection, Message msg) {
         messageHandler(msg, msg.getTypeMessage());
-        System.out.println(tcpConnection.getName());
+        System.out.println(tcpConnection.getClientProfile().getNameUser());
     }
 
     @Override
     public synchronized void onDisconnect(TCPConnection tcpConnection) {
         connections.remove(tcpConnection); // Удаление соединения из коллекции соединений
         printMsg("Client disconnected: " + tcpConnection);
+        printMsg(connections.toString());
     }
 
     @Override
@@ -118,11 +121,19 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                 break;
             case SERVICE_MESSAGE_ADD_NAME:
                 ClientProfile clientProfile = (ClientProfile) msg.getObjT();
-                String nameUser = clientProfile.getNameUser();
-                connection.setName(nameUser);
+                connection.setClientProfile(clientProfile);
                 usersProfiles.add(clientProfile);
+                printMsg(usersProfiles.toString());
+
                 Message messageUpdateList = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
                 sendToAllConnections(messageUpdateList);
+                break;
+            case SERVICE_MESSAGE_DEL_NAME:
+                ClientProfile clientProfile1 = (ClientProfile) msg.getObjT();
+                usersProfiles.remove(clientProfile1);
+                Message messageUpdateList1 = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+                sendToAllConnections(messageUpdateList1);
+                printMsg(usersProfiles.toString());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + typeMessage);
@@ -133,6 +144,18 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     public void actionPerformed(ActionEvent e) {
         onSendPackage(connection, fieldInput.getText());
     }
+
+//    public void removeTCPConnection(ClientProfile clientProfile) {
+//        Iterator<TCPConnection> tcpConnectionIterator = connections.iterator();
+//        while(tcpConnectionIterator.hasNext()) {
+//            if(tcpConnectionIterator.next().getClientProfile().equals(clientProfile)) {
+//                tcpConnectionIterator.remove();
+//                textArea.setText(String.valueOf(connections));
+//                textArea.setText(clientProfile.getNameUser() + " удален");
+//                textArea.setText(String.valueOf(connections));
+//            }
+//        }
+//    }
 
 
 }
