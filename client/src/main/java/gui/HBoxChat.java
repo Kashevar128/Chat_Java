@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -9,6 +10,11 @@ import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
 import ru.net.network.ClientProfile;
 import ru.net.network.Message;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public class HBoxChat extends HBox {
 
@@ -22,7 +28,7 @@ public class HBoxChat extends HBox {
         this.userName = message.getProfile().getNameUser();
         this.stringValue = message.getStringValue();
         this.inOrOut = message.isInOrOut();
-        this.photo = message.getProfile().getAvatar();
+        this.photo = decode(message.getProfile().getAvatar());
         this.label = getDialogLabel(inOrOut, stringValue);
 
         if(inOrOut) {
@@ -41,7 +47,7 @@ public class HBoxChat extends HBox {
     }
 
     public HBoxChat(ClientProfile clientProfile) {
-        this.photo = clientProfile.getAvatar();
+        this.photo = decode(clientProfile.getAvatar());
         this.userName = clientProfile.getNameUser();
         this.label = getListUsersLabel(userName);
         this.setAlignment(Pos.CENTER_LEFT);
@@ -77,7 +83,16 @@ public class HBoxChat extends HBox {
     }
 
     private ImageView decode(byte[] byteAva) {
-
+        ImageView ava = new ImageView();
+        ByteArrayInputStream bais = new ByteArrayInputStream(byteAva);
+        try {
+            BufferedImage image = ImageIO.read(bais);
+            Image imageFX = SwingFXUtils.toFXImage(image, null);
+            ava.setImage(imageFX);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ava;
     }
 
 //    ImageView getPhoto(String userName) {

@@ -2,10 +2,12 @@ package clientlogic;
 
 import gui.Avatar;
 import gui.ClientGuiController;
+import gui.ErrorAlertExample;
 import ru.net.network.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
@@ -29,22 +31,19 @@ public class Client implements TCPConnectionListener { // делаем насл�
     private String loginUser;
     private ClientProfile myClientProfile;
 
-    public ClientProfile getMyClientProfile() {
-        return myClientProfile;
-    }
-
     public Client(ClientGuiController controller, String name) throws IOException {
         this.controller = controller;
         loginUser = name;
         controller.name.setText(name);
-
+        this.myClientProfile = new ClientProfile(loginUser, Avatar.createAvatar(loginUser));
         try { // Блок для обхода исключений
             connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение
         } catch (IOException e) {
             e.printStackTrace();
+            ErrorAlertExample.getErrorConnection();
+            ErrorAlertExample.getErrorConnectionDialog(connection, );
         }
         System.out.println(IP_ADDR);
-        this.myClientProfile = new ClientProfile(loginUser, Avatar.createAvatar(loginUser));
     }
 
     public TCPConnection getConnection() {
@@ -54,7 +53,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         System.out.println("Connection ready...");
-        Message pack = new Message(loginUser,null, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
+        Message pack = new Message(myClientProfile,null, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
         connection.sendMessage(pack);
     }
 
@@ -64,8 +63,10 @@ public class Client implements TCPConnectionListener { // делаем насл�
     }
 
     @Override
-    public void onDisconnect(TCPConnection tcpConnection) {
+    public void onDisconnect(TCPConnection tcpConnection) throws SocketException {
         System.out.println("Connection " + tcpConnection + " close");
+        Message pack = new Message(myClientProfile, null, TypeMessage.SERVICE_MESSAGE_DEL_NAME);
+            connection.sendMessage(pack);
     }
 
     @Override
@@ -97,5 +98,9 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     public ArrayList<ClientProfile> getUsersList() {
         return usersList;
+    }
+
+    public ClientProfile getMyClientProfile() {
+        return myClientProfile;
     }
 }

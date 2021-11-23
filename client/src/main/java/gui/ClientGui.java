@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import ru.net.network.TCPConnectionListener;
 
 
 public class ClientGui {
@@ -38,6 +39,7 @@ public class ClientGui {
             public void handle(WindowEvent event) {
                 System.out.println("Клиент закрыт");
                 try {
+                    client.onDisconnect(client.getConnection());
                     client.getConnection().disconnect();
                 } catch (Exception e) {
                     System.out.println("Корректное завершение работы клиента");
