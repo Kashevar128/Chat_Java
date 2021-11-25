@@ -43,13 +43,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
         try { // Блок для обхода исключений
             connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение
         } catch (IOException e) {
-            e.printStackTrace();
             ErrorAlertExample.getErrorConnection();
             connection =  ErrorAlertExample.getErrorConnectionDialog(connection, IP_ADDR, PORT, this);
-            if(connection == null) {
-                ErrorAlertExample.getErrorConnectionFatal();
-                System.exit(0);
-            }
         }
         System.out.println(IP_ADDR);
     }

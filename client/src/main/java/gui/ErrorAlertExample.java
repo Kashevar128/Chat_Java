@@ -26,17 +26,22 @@ public class ErrorAlertExample {
   public static TCPConnection getErrorConnectionDialog(TCPConnection connection, String IP, int port, TCPConnectionListener event) {
       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
       alert.setTitle("Переподключение.");
-      alert.setHeaderText("Попробовать передоключиться?");
+      alert.setHeaderText("Попробовать переподключиться?");
       alert.setContentText("Нажмите ОК для переподключения или ОТМЕНА - для выходы из диалога.");
 
       Optional<ButtonType> result = alert.showAndWait();
       if (result.get() == ButtonType.OK) {
           try {
               connection = new TCPConnection(IP, port, event);
-          } catch (IOException e) {
+          } catch (Exception e) {
+              getErrorConnection();
               getErrorConnectionDialog(connection, IP, port, event);
           }
-      } else connection = null;
+      } else {
+          connection = null;
+          getErrorConnectionFatal();
+          System.exit(0);
+      }
       return connection;
   }
 
