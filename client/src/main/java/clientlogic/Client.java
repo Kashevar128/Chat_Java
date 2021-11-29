@@ -4,9 +4,9 @@ import gui.Avatar;
 import gui.ClientGui;
 import gui.ClientGuiController;
 import gui.ErrorAlertExample;
+import javafx.application.Platform;
 import ru.net.network.*;
 
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -51,7 +51,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         System.out.println("Connection ready...");
-        Message pack = new Message(myClientProfile,null, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
+        Message pack = new Message(myClientProfile, null, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
         connection.sendMessage(pack);
     }
 
@@ -64,7 +64,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public void onDisconnect(TCPConnection tcpConnection) throws SocketException {
         System.out.println("Connection " + tcpConnection + " close");
         Message pack = new Message(myClientProfile, null, TypeMessage.SERVICE_MESSAGE_DEL_NAME);
-            connection.sendMessage(pack);
+        connection.sendMessage(pack);
     }
 
     @Override
@@ -87,6 +87,16 @@ public class Client implements TCPConnectionListener { // делаем насл�
             case SERVICE_MESSAGE_UPDATE_LIST_USERS:
                 usersList = (ArrayList<ClientProfile>) msg.getObjT();
                 controller.printListUsers(getUsersList());
+                break;
+            case SERVICE_MESSAGE_CONNECT_ERROR:
+                System.out.println(msg.getObjT().toString());
+                Platform.runLater(() -> {
+                    ErrorAlertExample.getErrorConnection();
+                    ErrorAlertExample.getErrorConnectionDialog();
+                    connection.disconnect();
+                    connection = connect();
+                });
+                break;
         }
     }
 
@@ -108,13 +118,13 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     private TCPConnection connect() {
         boolean connectionCompleted = false;
-        while(!connectionCompleted) {
+        while (!connectionCompleted) {
             try {
                 connection = new TCPConnection(IP_ADDR, PORT, this);
                 connectionCompleted = true;
             } catch (IOException e) {
-                ErrorAlertExample.getErrorConnection();
-                ErrorAlertExample.getErrorConnectionDialog();
+                    ErrorAlertExample.getErrorConnection();
+                    ErrorAlertExample.getErrorConnectionDialog();
             }
         }
         return connection;

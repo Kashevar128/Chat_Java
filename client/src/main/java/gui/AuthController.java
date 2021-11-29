@@ -1,6 +1,7 @@
 package gui;
 
 import clientlogic.DataBase;
+import javafx.application.Platform;
 import javafx.scene.control.TextField;
 
 public class AuthController {
@@ -13,7 +14,13 @@ public class AuthController {
                 .auth(login.getText(), password.getText());
         if (auth) {
             login.getScene().getWindow().hide();
-            new ClientGui(login.getText());
+            Platform.runLater(() -> {
+                try {
+                    new ClientGui(login.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } else {
             login.setText("WRONG LOGIN OR PASSWORD");
             password.clear();

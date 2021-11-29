@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -33,6 +35,18 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("Зарытие сработало!");
+                if(!connections.isEmpty()) {
+                    String msg = "Сервер накрылся.";
+                    Message pack = new Message(msg, null, SERVICE_MESSAGE_CONNECT_ERROR);
+                    sendToAllConnections(pack);
+                }
+            }
+        });
+
         setSize(WIDTH, HEIGHT); // Введение размеров окна
         setLocationRelativeTo(null); // Расположение окна по середине экрана
         setAlwaysOnTop(true); // Расположение в верхней части экрана
@@ -59,6 +73,8 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         }
 
     }
+
+
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) {
@@ -145,17 +161,23 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         onSendPackage(connection, fieldInput.getText());
     }
 
-//    public void removeTCPConnection(ClientProfile clientProfile) {
-//        Iterator<TCPConnection> tcpConnectionIterator = connections.iterator();
-//        while(tcpConnectionIterator.hasNext()) {
-//            if(tcpConnectionIterator.next().getClientProfile().equals(clientProfile)) {
-//                tcpConnectionIterator.remove();
-//                textArea.setText(String.valueOf(connections));
-//                textArea.setText(clientProfile.getNameUser() + " удален");
-//                textArea.setText(String.valueOf(connections));
+    public void unexpectedShutdown() {
+        final Thread mainThread = Thread.currentThread();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            if(!connections.isEmpty()) {
+//                String mes  = "Упс, что то пошло не так!";
+//                Message pack = new Message(mes, null, SERVICE_MESSAGE_CONNECT_ERROR);
+//                sendToAllConnections(pack);
 //            }
-//        }
-//    }
+            System.out.println("Крючок сработал!!");
+            try {
+                mainThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }));
+    }
+
 
 
 }
