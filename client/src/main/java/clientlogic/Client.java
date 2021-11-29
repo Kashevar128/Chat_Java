@@ -40,13 +40,8 @@ public class Client implements TCPConnectionListener { // делаем насл�
         loginUser = name;
         controller.name.setText(name);
         this.myClientProfile = new ClientProfile(loginUser, Avatar.createAvatar(loginUser));
-        try { // Блок для обхода исключений
-            connection = new TCPConnection(IP_ADDR, PORT, this); // Создаем TCP - соединение
-        } catch (IOException e) {
-            ErrorAlertExample.getErrorConnection();
-            connection =  ErrorAlertExample.getErrorConnectionDialog(connection, IP_ADDR, PORT, this);
-        }
-        System.out.println(IP_ADDR);
+
+        connection = connect();
     }
 
     public TCPConnection getConnection() {
@@ -109,5 +104,19 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     public ClientGui getClientGui() {
         return clientGui;
+    }
+
+    private TCPConnection connect() {
+        boolean connectionCompleted = false;
+        while(!connectionCompleted) {
+            try {
+                connection = new TCPConnection(IP_ADDR, PORT, this);
+                connectionCompleted = true;
+            } catch (IOException e) {
+                ErrorAlertExample.getErrorConnection();
+                ErrorAlertExample.getErrorConnectionDialog();
+            }
+        }
+        return connection;
     }
 }

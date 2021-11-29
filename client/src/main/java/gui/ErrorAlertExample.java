@@ -14,46 +14,38 @@ import java.util.Optional;
 public class ErrorAlertExample {
 
 
-  public static void getErrorConnection() {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Ошибка подключения.");
-      alert.setHeaderText("Нет связи с сервером");
-      alert.setContentText("Нажмите ОК для продолжения.");
+    public static void getErrorConnection() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка подключения.");
+        alert.setHeaderText("Нет связи с сервером");
+        alert.setContentText("Нажмите ОК для продолжения.");
 
-      alert.showAndWait();
-  }
+        alert.showAndWait();
+    }
 
-  public static TCPConnection getErrorConnectionDialog(TCPConnection connection, String IP, int port, TCPConnectionListener event) {
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-      alert.setTitle("Переподключение.");
-      alert.setHeaderText("Попробовать переподключиться?");
-      alert.setContentText("Нажмите ОК для переподключения или ОТМЕНА - для выходы из диалога.");
+    public static void getErrorConnectionDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Переподключение.");
+        alert.setHeaderText("Попробовать переподключиться?");
+        alert.setContentText("Нажмите ОК для переподключения или ОТМЕНА - для выходы из диалога.");
 
-      Optional<ButtonType> result = alert.showAndWait();
-      if (result.get() == ButtonType.OK) {
-          try {
-              connection = new TCPConnection(IP, port, event);
-          } catch (Exception e) {
-              getErrorConnection();
-              getErrorConnectionDialog(connection, IP, port, event);
-          }
-      } else {
-          connection = null;
-          getErrorConnectionFatal();
-          System.exit(0);
-      }
-      return connection;
-  }
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            return;
+        }
+        getErrorConnectionFatal();
+        System.exit(0);
+    }
 
-  public static void getErrorConnectionFatal() {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Ошибка подключения.");
-      alert.setHeaderText("Не удалось установить связь");
-      alert.setContentText("Нажмите ОК для выхода из приложения.");
+    public static void getErrorConnectionFatal() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка подключения.");
+        alert.setHeaderText("Не удалось установить связь");
+        alert.setContentText("Нажмите ОК для выхода из приложения.");
 
-      alert.showAndWait();
+        alert.showAndWait();
 
-      }
+    }
 
-  }
+}
 
