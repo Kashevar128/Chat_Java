@@ -87,15 +87,6 @@ public class Client implements TCPConnectionListener { // делаем насл�
                 usersList = (ArrayList<ClientProfile>) msg.getObjT();
                 controller.printListUsers(getUsersList());
                 break;
-            case SERVICE_MESSAGE_CONNECT_ERROR:
-                System.out.println(msg.getObjT().toString());
-                Platform.runLater(() -> {
-                    ErrorAlertExample.getErrorConnection();
-                    ErrorAlertExample.getErrorConnectionDialog();
-                    connection.disconnect();
-                    connection = connect();
-                });
-                break;
         }
     }
 

@@ -33,17 +33,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
-//        addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                System.out.println("Зарытие сработало!");
-//                if(!connections.isEmpty()) {
-//                    String msg = "Сервер накрылся.";
-//                    Message pack = new Message(msg, null, SERVICE_MESSAGE_CONNECT_ERROR);
-//                    sendToAllConnections(pack);
-//                }
-//            }
-//        });
 
         setSize(WIDTH, HEIGHT); // Введение размеров окна
         setLocationRelativeTo(null); // Расположение окна по середине экрана
@@ -146,8 +135,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                 Message messageUpdateList = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
                 sendToAllConnections(messageUpdateList);
                 break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + typeMessage);
         }
     }
 
