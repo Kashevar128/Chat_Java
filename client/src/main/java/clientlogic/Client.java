@@ -1,9 +1,6 @@
 package clientlogic;
 
-import gui.Avatar;
-import gui.ClientGui;
-import gui.ClientGuiController;
-import gui.ErrorAlertExample;
+import gui.*;
 import javafx.application.Platform;
 import ru.net.network.*;
 
@@ -51,7 +48,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     @Override
     public void onConnectionReady(TCPConnection tcpConnection) { // Расписываем интерфейсы для работы со стороны клиента, методы синхронизировать не надо, т.к. с ними работаем только сам клиент
         System.out.println("Connection ready...");
-        Message pack = new Message(myClientProfile, null, TypeMessage.SERVICE_MESSAGE_ADD_NAME);
+        Message pack = new Message(myClientProfile, null, TypeMessage.SERVICE_MESSAGE_AUTHORIZATION);
         connection.sendMessage(pack);
     }
 
@@ -62,14 +59,16 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onDisconnect(TCPConnection tcpConnection) throws SocketException {
-        System.out.println("Connection " + tcpConnection + " close");
-        Message pack = new Message(myClientProfile, null, TypeMessage.SERVICE_MESSAGE_DEL_NAME);
-        connection.sendMessage(pack);
+        System.out.println("Сервер упал.");
+        Platform.runLater(()-> {
+           connection = connect();
+           InformationAlertExample.getInformationConnectionComplete();
+        });
     }
 
     @Override
     public void onException(TCPConnection tcpConnection, Exception e) {
-        System.out.println("Server not found");
+        throw new RuntimeException("Server not found");
     }
 
     @Override
@@ -120,11 +119,17 @@ public class Client implements TCPConnectionListener { // делаем насл�
         boolean connectionCompleted = false;
         while (!connectionCompleted) {
             try {
+                if (connection != null) {
+                    ErrorAlertExample.getErrorConnection();
+                    ErrorAlertExample.getErrorConnectionDialog();
+                    connection.disconnect();
+                    connection = null;
+                }
                 connection = new TCPConnection(IP_ADDR, PORT, this);
                 connectionCompleted = true;
             } catch (IOException e) {
-                    ErrorAlertExample.getErrorConnection();
-                    ErrorAlertExample.getErrorConnectionDialog();
+                ErrorAlertExample.getErrorConnection();
+                ErrorAlertExample.getErrorConnectionDialog();
             }
         }
         return connection;

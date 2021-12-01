@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 public class InformationAlertExample {
 
-    public void getInformationConnectionComplete() {
+    public static void getInformationConnectionComplete() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Попытка соединения.");
         alert.setHeaderText("Связь с сервером установлена");

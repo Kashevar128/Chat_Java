@@ -11,8 +11,6 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 import static ru.net.network.TypeMessage.*;
 
@@ -35,17 +33,17 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                System.out.println("Зарытие сработало!");
-                if(!connections.isEmpty()) {
-                    String msg = "Сервер накрылся.";
-                    Message pack = new Message(msg, null, SERVICE_MESSAGE_CONNECT_ERROR);
-                    sendToAllConnections(pack);
-                }
-            }
-        });
+//        addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosing(WindowEvent e) {
+//                System.out.println("Зарытие сработало!");
+//                if(!connections.isEmpty()) {
+//                    String msg = "Сервер накрылся.";
+//                    Message pack = new Message(msg, null, SERVICE_MESSAGE_CONNECT_ERROR);
+//                    sendToAllConnections(pack);
+//                }
+//            }
+//        });
 
         setSize(WIDTH, HEIGHT); // Введение размеров окна
         setLocationRelativeTo(null); // Расположение окна по середине экрана
@@ -110,8 +108,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     @Override
     public synchronized void onDisconnect(TCPConnection tcpConnection) {
         connections.remove(tcpConnection); // Удаление соединения из коллекции соединений
+        usersProfiles.remove(tcpConnection.getClientProfile());
+        Message messageUpdateList1 = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+        if(!connections.isEmpty()) {
+            sendToAllConnections(messageUpdateList1);
+        }
+        printMsg(usersProfiles.toString());
         printMsg("Client disconnected: " + tcpConnection);
-        printMsg(connections.toString());
     }
 
     @Override
@@ -135,21 +138,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                 sendToAllConnections(msg);
                 printMsg(msg.getStringValue());
                 break;
-            case SERVICE_MESSAGE_ADD_NAME:
+            case SERVICE_MESSAGE_AUTHORIZATION:
                 ClientProfile clientProfile = (ClientProfile) msg.getObjT();
                 connection.setClientProfile(clientProfile);
-                usersProfiles.add(clientProfile);
+                usersProfiles.add(connection.getClientProfile());
                 printMsg(usersProfiles.toString());
-
                 Message messageUpdateList = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
                 sendToAllConnections(messageUpdateList);
-                break;
-            case SERVICE_MESSAGE_DEL_NAME:
-                ClientProfile clientProfile1 = (ClientProfile) msg.getObjT();
-                usersProfiles.remove(clientProfile1);
-                Message messageUpdateList1 = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
-                sendToAllConnections(messageUpdateList1);
-                printMsg(usersProfiles.toString());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + typeMessage);
@@ -159,23 +154,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     @Override
     public void actionPerformed(ActionEvent e) {
         onSendPackage(connection, fieldInput.getText());
-    }
-
-    public void unexpectedShutdown() {
-        final Thread mainThread = Thread.currentThread();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            if(!connections.isEmpty()) {
-//                String mes  = "Упс, что то пошло не так!";
-//                Message pack = new Message(mes, null, SERVICE_MESSAGE_CONNECT_ERROR);
-//                sendToAllConnections(pack);
-//            }
-            System.out.println("Крючок сработал!!");
-            try {
-                mainThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }));
     }
 
 
