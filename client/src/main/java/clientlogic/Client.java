@@ -2,6 +2,7 @@ package clientlogic;
 
 import gui.*;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import ru.net.network.*;
 
 import java.io.IOException;
@@ -12,8 +13,9 @@ import java.util.ArrayList;
 
 public class Client implements TCPConnectionListener { // делаем наследоваие от JFrame и осуществляем интерфейсы ActionListener и TCPConnectionListener
 
-    private static String IP_ADDR = null;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
-    private ArrayList<ClientProfile> usersList = null;
+    private static String IP_ADDR;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
+    private ArrayList<ClientProfile> usersList;
+    private boolean correctShutdown;
 
     static {
         try {
@@ -30,13 +32,20 @@ public class Client implements TCPConnectionListener { // делаем насл�
     private String loginUser;
     private ClientProfile myClientProfile;
     private ClientGui clientGui;
+    private Image ava;
+
 
     public Client(ClientGuiController controller, String name, ClientGui clientGui) throws IOException {
         this.clientGui = clientGui;
         this.controller = controller;
         loginUser = name;
         controller.name.setText(name);
-        this.myClientProfile = new ClientProfile(loginUser, Avatar.createAvatar(loginUser));
+        byte[] byteAva = Avatar.createAvatar(loginUser);
+        ava = HBoxChat.decodeByteToImage(byteAva);
+        this.myClientProfile = new ClientProfile(loginUser, byteAva);
+        Platform.runLater(() -> {
+            controller.yourAvatar.setImage(ava);
+        });
 
         connection = connect();
     }
@@ -59,6 +68,10 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onDisconnect(TCPConnection tcpConnection) throws SocketException {
+        if(isCorrectShutdown()) {
+            System.out.println("Корректное завершение работы.");
+            return;
+        }
         System.out.println("Сервер упал.");
         Platform.runLater(()-> {
            connection = connect();
@@ -124,5 +137,13 @@ public class Client implements TCPConnectionListener { // делаем насл�
             }
         }
         return connection;
+    }
+
+    public boolean isCorrectShutdown() {
+        return correctShutdown;
+    }
+
+    public void setCorrectShutdown(boolean correctShutdown) {
+        this.correctShutdown = correctShutdown;
     }
 }

@@ -39,7 +39,7 @@ public class ClientGui {
         stage.setOnCloseRequest(event -> {
             System.out.println("Клиент закрыт");
             try {
-                client.onDisconnect(client.getConnection());
+                client.setCorrectShutdown(true);
                 client.getConnection().disconnect();
             } catch (Exception e) {
                 System.out.println("Корректное завершение работы клиента");

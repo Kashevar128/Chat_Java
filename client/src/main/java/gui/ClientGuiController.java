@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import clientlogic.Client;
 
@@ -22,6 +23,7 @@ public class ClientGuiController {
     public TextField search;
     public Label name;
     public ListView listUsers;
+    public ImageView yourAvatar;
 
     private Client client;
 

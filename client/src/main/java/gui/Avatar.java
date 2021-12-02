@@ -19,6 +19,8 @@ import ru.net.network.Message;
 
 public class Avatar {
 
+    public static final String BASE64_PREFIX = "data:image/png;base64,";
+
     private static byte[] create(int id, String userName) throws IOException {
         int width = 20;
         int grid = 5;
@@ -84,5 +86,9 @@ public class Avatar {
             e.printStackTrace();                                                   // делаем его по модулю.
         }
         return avatar;
+    }
+
+    public static String createBase64Avatar(byte[] bytes) {
+        return BASE64_PREFIX + Base64.getEncoder().encodeToString(bytes);
     }
 }

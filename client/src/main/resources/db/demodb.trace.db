@@ -1,0 +1,4 @@
+2021-12-02 17:32:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "USERS" не найдена
+Table "USERS" not found; SQL statement:
+SELECT * FROM users [42102-200]

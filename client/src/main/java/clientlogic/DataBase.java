@@ -2,7 +2,9 @@ package clientlogic;
 
 import org.intellij.lang.annotations.Language;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.Base64;
 
 public class DataBase implements AuthService {
 
@@ -13,16 +15,17 @@ public class DataBase implements AuthService {
     }
 
     public static void main(String[] args) throws Exception {
+        // addField();
         resultSet();
     }
 
     public static synchronized DataBase getInstance() throws Exception {
-        if(instance == null) instance = new DataBase();
+        if (instance == null) instance = new DataBase();
         return instance;
     }
 
     private static void init() throws ClassNotFoundException {
-      //  Class.forName("com.mysql.cj.jdbc.Driver");
+        //  Class.forName("com.mysql.cj.jdbc.Driver");
         Class.forName("org.h2.Driver");
     }
 
@@ -33,16 +36,27 @@ public class DataBase implements AuthService {
         String urlH2 = "jdbc:h2:./client/src/main/resources/db/demodb";
         String user = "root";
         String pass = "root";
-       // return DriverManager.getConnection(urlMySql, user, pass);
+        // return DriverManager.getConnection(urlMySql, user, pass);
         return DriverManager.getConnection(urlH2, "", "");
+    }
+
+    public static void addField() throws Exception {
+        init();
+        try (Connection connection = getConnection()) {
+            @Language("SQL")
+            String query = "ALTER TABLE users ADD avatar TEXT NULL";
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(query);
+            }
+        }
     }
 
     private static void createTable() throws Exception {
         init();
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_01 = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTO_INCREMENT," +
-                    "name VARCHAR(100), password VARCHAR(100));";
+                    "name VARCHAR(100), password VARCHAR(100)); avatar TEXT";
             try (Statement statement = connection.createStatement()) {
                 statement.execute(query_01);
             }
@@ -51,13 +65,14 @@ public class DataBase implements AuthService {
 
     public static void resultSet() throws Exception {
         init();
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_02 = "SELECT * FROM users";
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(query_02);
                 while (rs.next()) {
-                    System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " ; " + rs.getString("password"));
+                    System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " ; " + rs.getString("password") +
+                            " ; " + rs.getString("avatar"));
                 }
             }
         }
@@ -65,7 +80,7 @@ public class DataBase implements AuthService {
 
     public static void delete(int ID) throws Exception {
         init();
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_00 = "DELETE FROM users WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query_00)) {
@@ -79,7 +94,7 @@ public class DataBase implements AuthService {
     @Override
     public boolean addUser(String name, String pass) throws Exception {
         init();
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_01 = "INSERT INTO users (name, password) VALUES (?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query_01)) {
@@ -87,7 +102,7 @@ public class DataBase implements AuthService {
                 statement.setString(2, pass);
                 statement.executeUpdate();
                 return true;
-            }catch (SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
@@ -97,7 +112,7 @@ public class DataBase implements AuthService {
     @Override
     public boolean auth(String name, String pass) throws Exception {
         init();
-        try(Connection connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_02 = "SELECT * FROM users";
             try (Statement statement = connection.createStatement()) {
@@ -109,4 +124,15 @@ public class DataBase implements AuthService {
             }
         }
     }
+
+    public String getAvatar(String name) throws Exception {
+        init();
+        try (Connection connection = getConnection()) {
+            @Language("SQL")
+            String query = "";
+        }
+        return null;
+    }
+
+
 }

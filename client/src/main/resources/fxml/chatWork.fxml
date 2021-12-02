@@ -76,6 +76,10 @@
    <center>
        <VBox prefHeight="592.0" prefWidth="585.0" BorderPane.alignment="CENTER">
            <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="549.0">
+            <ImageView fx:id="yourAvatar" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin></ImageView>
             <Label fx:id="name" prefHeight="17.0" prefWidth="306.0" text="asdadas" textFill="#544f4f">
                <font>
                   <Font name="Broadway" size="18.0" />
