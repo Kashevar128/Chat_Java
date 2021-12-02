@@ -40,9 +40,11 @@ public class Client implements TCPConnectionListener { // делаем насл�
         this.controller = controller;
         loginUser = name;
         controller.name.setText(name);
-        byte[] byteAva = Avatar.createAvatar(loginUser);
+
+        byte[] byteAva = Avatar.decodeBase64Avatar(clientGui.getBase64Ava());
         ava = HBoxChat.decodeByteToImage(byteAva);
         this.myClientProfile = new ClientProfile(loginUser, byteAva);
+
         Platform.runLater(() -> {
             controller.yourAvatar.setImage(ava);
         });

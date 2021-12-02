@@ -16,7 +16,7 @@ public class AuthController {
             login.getScene().getWindow().hide();
             Platform.runLater(() -> {
                 try {
-                    new ClientGui(login.getText());
+                    new ClientGui(login.getText(), DataBase.getAvatar(login.getText()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

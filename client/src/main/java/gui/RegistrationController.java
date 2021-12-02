@@ -15,7 +15,7 @@ public class RegistrationController {
             boolean reg = DataBase.getInstance().addUser(login.getText(), password.getText());
             if(reg) {
                 login.getScene().getWindow().hide();
-                new ClientGui(login.getText());
+                new ClientGui(login.getText(), DataBase.getAvatar(login.getText()));
                 DataBase.resultSet();
             }
     }

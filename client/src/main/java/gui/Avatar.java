@@ -89,6 +89,10 @@ public class Avatar {
     }
 
     public static String createBase64Avatar(byte[] bytes) {
-        return BASE64_PREFIX + Base64.getEncoder().encodeToString(bytes);
+        return Base64.getMimeEncoder().encodeToString(bytes);
+    }
+
+    public static byte[] decodeBase64Avatar(String ava) {
+        return Base64.getMimeDecoder().decode(ava);
     }
 }

@@ -1,5 +1,6 @@
 package clientlogic;
 
+import gui.Avatar;
 import org.intellij.lang.annotations.Language;
 
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class DataBase implements AuthService {
         try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_01 = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTO_INCREMENT," +
-                    "name VARCHAR(100), password VARCHAR(100)); avatar TEXT";
+                    "name VARCHAR(100), password VARCHAR(100), avatar TEXT)";
             try (Statement statement = connection.createStatement()) {
                 statement.execute(query_01);
             }
@@ -96,10 +97,11 @@ public class DataBase implements AuthService {
         init();
         try (Connection connection = getConnection()) {
             @Language("SQL")
-            String query_01 = "INSERT INTO users (name, password) VALUES (?,?)";
+            String query_01 = "INSERT INTO users (name, password, avatar) VALUES (?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query_01)) {
                 statement.setString(1, name);
                 statement.setString(2, pass);
+                statement.setString(3,Avatar.createBase64Avatar(Avatar.createAvatar(name)));
                 statement.executeUpdate();
                 return true;
             } catch (SQLException e) {
@@ -125,11 +127,17 @@ public class DataBase implements AuthService {
         }
     }
 
-    public String getAvatar(String name) throws Exception {
+    public static String getAvatar(String name) throws Exception {
         init();
         try (Connection connection = getConnection()) {
             @Language("SQL")
-            String query = "";
+            String query = "SELECT * FROM users";
+            try (Statement statement = connection.createStatement()) {
+                ResultSet rs = statement.executeQuery(query);
+                while (rs.next()) {
+                    if (rs.getString("name").equals(name)) return rs.getString("avatar");
+                }
+            }
         }
         return null;
     }
