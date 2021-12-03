@@ -22,6 +22,7 @@ public class Avatar {
     public static final String BASE64_PREFIX = "data:image/png;base64,";
 
     private static byte[] create(int id, String userName) throws IOException {
+        int absID = Math.abs(id);
         int width = 20;
         int grid = 5;
         int padding = width / 2;
@@ -31,7 +32,7 @@ public class Avatar {
         _2d.setColor(new Color(240, 240, 240));
         _2d.fillRect(0, 0, size, size);
         _2d.setColor(randomColor(80, 200));
-        char[] idchars = createIdent(id);
+        char[] idchars = createIdent(absID);
         int i = idchars.length;
         for (int x = 0; x < Math.ceil(grid / 2.0); x++) {
             for (int y = 0; y < grid; y++) {
@@ -87,12 +88,8 @@ public class Avatar {
         }
         return avatar;
     }
-
-    public static String createBase64Avatar(byte[] bytes) {
-        return Base64.getMimeEncoder().encodeToString(bytes);
-    }
-
-    public static byte[] decodeBase64Avatar(String ava) {
-        return Base64.getMimeDecoder().decode(ava);
-    }
 }
+
+
+
+

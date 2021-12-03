@@ -82,6 +82,7 @@ public class AvatarHelper {
         BigInteger bi = new BigInteger(id + "identicon" + id, 36);
         bi = bi.xor(bi_content);
         return bi.toString(10).toCharArray();
+
     }
 
 }

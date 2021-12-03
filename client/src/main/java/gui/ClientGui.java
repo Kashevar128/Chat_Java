@@ -19,14 +19,14 @@ public class ClientGui {
     private ClientGuiController controller;
     private Client client;
     private String nameUser;
-    private String base64Ava;
+    private byte[] avatar;
 
-    public ClientGui(String name, String base64) throws Exception {
+    public ClientGui(String name, byte[] avatar) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chatWork.fxml"));
         Parent chat = loader.load();
         controller = loader.getController();
         nameUser = name;
-        base64Ava = base64;
+        this.avatar = avatar;
 
         stage = new Stage();
         stage.setTitle("Сетевой чат");
@@ -57,7 +57,7 @@ public class ClientGui {
         return stage;
     }
 
-    public String getBase64Ava() {
-        return base64Ava;
+    public byte[] getAvatar() {
+        return avatar;
     }
 }

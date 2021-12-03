@@ -69,7 +69,7 @@ public class HBoxChat extends HBox {
         String stylesInGoingLabel = "-fx-background-color: #D3EEDF;" +
                 "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
 
-        String stylesOutGoingLabel = "-fx-background-color: #AAE0FF;" + //
+        String stylesOutGoingLabel = "-fx-background-color: #B9D7E9;" + //
                 "-fx-background-radius: 25px;" + "-fx-background-insets: -10;";
 
         Label label = new Label(text);
