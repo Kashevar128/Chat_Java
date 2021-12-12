@@ -3,14 +3,15 @@ package clientlogic;
 import gui.Avatar;
 import org.intellij.lang.annotations.Language;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.Arrays;
-import java.util.Base64;
+
 
 public class DataBase implements AuthService {
 
     private static DataBase instance;
+
+    org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataBase.class);
 
     public DataBase() throws Exception {
         createTable();
@@ -104,9 +105,10 @@ public class DataBase implements AuthService {
                 statement.setString(2, pass);
                 statement.setBytes(3,Avatar.createAvatar(name));
                 statement.executeUpdate();
+                logger.info("Операция добавления нового пользователя прошла успешно.");
                 return true;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("SQLException error", e);
                 return false;
             }
         }
@@ -121,8 +123,15 @@ public class DataBase implements AuthService {
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(query_02);
                 while (rs.next()) {
-                    if (rs.getString("name").equals(name) && rs.getString("password").equals(pass)) return true;
+                    if (rs.getString("name").equals(name) && rs.getString("password").equals(pass)) {
+                        logger.info("Пользователь опознан.");
+                        return true;
+                    }
                 }
+                logger.info("Неизвестный пользователь.");
+                return false;
+            } catch (SQLException e) {
+                logger.error("SQLException error", e);
                 return false;
             }
         }

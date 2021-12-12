@@ -46,11 +46,11 @@ public class Avatar {
         }
         _2d.dispose();
 
-        StringBuilder path = new StringBuilder();
-        path.append("client\\src\\main\\resources\\img\\");
-        path.append(userName);
-        path.append(".png");
-        ImageIO.write(img, "png", new File(path.toString()));
+//        StringBuilder path = new StringBuilder();
+//        path.append("client\\src\\main\\resources\\img\\");
+//        path.append(userName);
+//        path.append(".png");
+//        ImageIO.write(img, "png", new File(path.toString()));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(img, "png", byteArrayOutputStream);
