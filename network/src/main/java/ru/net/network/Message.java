@@ -1,6 +1,10 @@
 package ru.net.network;
 
+import javax.xml.crypto.Data;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Message<T, V> implements Serializable {
 
@@ -8,6 +12,8 @@ public class Message<T, V> implements Serializable {
     private ClientProfile profile;
     private String stringValue;
     private boolean inOrOut;
+    private Date sendAt;
+
     private T obj;
     private V obj_2;
 
@@ -16,12 +22,14 @@ public class Message<T, V> implements Serializable {
         this.profile = user;
         this.stringValue = "[" + profile.getNameUser() + "] " + stringValue;
         this.inOrOut = true;
+        setSendAt(new Date());
     }
 
     public Message(T obj, V obj_2, TypeMessage typeMessage) {
         this.typeMessage = typeMessage;
         this.obj = obj;
         this.obj_2 = obj_2;
+        setSendAt(new Date());
     }
 
     public boolean isInOrOut() {
@@ -46,5 +54,13 @@ public class Message<T, V> implements Serializable {
 
     public T getObjT() {
         return obj;
+    }
+
+    public void setSendAt(Date sendAt) {
+        this.sendAt = sendAt;s
+    }
+
+    public Date getSendAt() {
+        return sendAt;
     }
 }

@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,5 +15,16 @@ public class AuthGui extends Application {
         primaryStage.setScene(new Scene(auth));
         primaryStage.setResizable(false);
         primaryStage.show();
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(180000);
+                Platform.runLater(() -> {
+                    primaryStage.close();
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

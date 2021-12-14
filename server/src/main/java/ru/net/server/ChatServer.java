@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static ru.net.network.TypeMessage.*;
 
@@ -24,6 +25,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
     private final ArrayList<ClientProfile> usersProfiles = new ArrayList<>();
+    private final ArrayList<Message> messages = new ArrayList<>();
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
@@ -61,8 +63,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     }
 
-
-
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
         for (TCPConnection tcpConnection : connections) {
             if (msg.getTypeMessage().equals(VERBAL_MESSAGE)) {
@@ -74,7 +74,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         }
     }
 
-    private synchronized void printMsg(String msg) {                            // Метод для выведения сообщения в поле диалога
+    private synchronized void printMsg(String msg) {// Метод для выведения сообщения в поле диалога
         SwingUtilities.invokeLater(() -> {                                      // В отдельном потоке, т.к. так как есть возможность одновременного обращения к методу из нескольких мест в программе
             textArea.append(msg + "\n");                                        // Добавление сообщения
             textArea.setCaretPosition(textArea.getDocument().getLength());      // Переведение каретки в конец строки после сообщения, чтобы иметь пустую строку между сообщениями.
@@ -124,6 +124,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     public void messageHandler(Message msg, TypeMessage typeMessage) {
         switch (typeMessage) {
             case VERBAL_MESSAGE:
+                messages.add(msg);
                 sendToAllConnections(msg);
                 printMsg(msg.getStringValue());
                 break;
@@ -143,6 +144,9 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         onSendPackage(connection, fieldInput.getText());
     }
 
-
+//    private ArrayList<Message> sortedForDate (ArrayList<Message> arrayMessages) {
+//        arrayMessages.stream().map()
+//
+//    }
 
 }
