@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import static ru.net.network.TypeMessage.*;
@@ -144,9 +145,9 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         onSendPackage(connection, fieldInput.getText());
     }
 
-//    private ArrayList<Message> sortedForDate (ArrayList<Message> arrayMessages) {
-//        arrayMessages.stream().map()
-//
-//    }
+    private ArrayList<Message> sortedForDate (ArrayList<Message> arrayMessages) {
+        Collections.sort(arrayMessages);
+        return arrayMessages;
+    }
 
 }

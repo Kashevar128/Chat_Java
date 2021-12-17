@@ -6,13 +6,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Message<T, V> implements Serializable {
+public class Message<T, V> implements Serializable, Comparable<Message> {
 
     private TypeMessage typeMessage;
     private ClientProfile profile;
     private String stringValue;
     private boolean inOrOut;
     private Date sendAt;
+    private long sendingTime;
 
     private T obj;
     private V obj_2;
@@ -23,6 +24,7 @@ public class Message<T, V> implements Serializable {
         this.stringValue = "[" + profile.getNameUser() + "] " + stringValue;
         this.inOrOut = true;
         setSendAt(new Date());
+        setSendingTime(System.nanoTime());
     }
 
     public Message(T obj, V obj_2, TypeMessage typeMessage) {
@@ -30,6 +32,7 @@ public class Message<T, V> implements Serializable {
         this.obj = obj;
         this.obj_2 = obj_2;
         setSendAt(new Date());
+        setSendingTime(System.nanoTime());
     }
 
     public boolean isInOrOut() {
@@ -57,10 +60,25 @@ public class Message<T, V> implements Serializable {
     }
 
     public void setSendAt(Date sendAt) {
-        this.sendAt = sendAt;s
+        this.sendAt = sendAt;
     }
 
     public Date getSendAt() {
         return sendAt;
+    }
+
+    public long getSendingTime() {
+        return sendingTime;
+    }
+
+    public void setSendingTime(long sendingTime) {
+        this.sendingTime = sendingTime;
+    }
+
+    @Override
+    public int compareTo(Message o) {
+        if(this.sendingTime - o.sendingTime < 0) return -1;
+        if(this.sendingTime - o.sendingTime > 0) return 1;
+        return 0;
     }
 }
