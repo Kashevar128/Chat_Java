@@ -1,5 +1,6 @@
 package ru.net.server;
 
+import javafx.scene.shape.Path;
 import ru.net.network.*;
 
 import javax.swing.*;
@@ -8,8 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,6 +55,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         setVisible(true); //Пишем - показать окно
 
         this.serverProfile = new ClientProfile(NAME_SERVER, null);
+
+        File file = new File("server/src/main/resources/reserve.txt");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         printMsg("Server running..."); // Консоль - запуск сервера
         printMsg("You have to wait connection");
