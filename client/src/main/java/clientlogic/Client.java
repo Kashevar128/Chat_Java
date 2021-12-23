@@ -16,6 +16,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     private static String IP_ADDR;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
     private ArrayList<ClientProfile> usersList;
     private boolean correctShutdown;
+    org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(Client.class);
 
     static {
         try {
@@ -72,7 +73,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public void onDisconnect(TCPConnection tcpConnection) throws SocketException {
         if(isCorrectShutdown()) {
             System.out.println("Корректное завершение работы.");
-            return;
+            connection.disconnect();
         }
         System.out.println("Сервер упал.");
         Platform.runLater(()-> {
@@ -83,7 +84,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onException(TCPConnection tcpConnection, Exception e) {
-        throw new RuntimeException("Server not found");
+        e.printStackTrace();
     }
 
     @Override

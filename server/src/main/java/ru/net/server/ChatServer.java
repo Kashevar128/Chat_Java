@@ -5,12 +5,11 @@ import ru.net.network.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,13 +29,14 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
     private final ArrayList<ClientProfile> usersProfiles = new ArrayList<>();
-    private final ArrayList<Message> messages = new ArrayList<>();
+    private final static ArrayList<Message> messages = new ArrayList<>();
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
     private TCPConnection connection = null;
     private static final String NAME_SERVER = "Admin";
     private ClientProfile serverProfile;
+    private static File fileReservServer;
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -52,6 +52,47 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         add(fieldNickname, BorderLayout.NORTH); // Добавляем поле никнейма на север окна клиента
         setResizable(false);
 
+        this.addWindowListener(new WindowListener() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ChatServer.getFileReservServer()))) {
+                    oos.writeObject(ChatServer.getMessages());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
+
         setVisible(true); //Пишем - показать окно
 
         this.serverProfile = new ClientProfile(NAME_SERVER, null);
@@ -62,6 +103,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         } catch (IOException e) {
             e.printStackTrace();
         }
+        fileReservServer = file;
 
         printMsg("Server running..."); // Консоль - запуск сервера
         printMsg("You have to wait connection");
@@ -111,7 +153,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         connections.remove(tcpConnection); // Удаление соединения из коллекции соединений
         usersProfiles.remove(tcpConnection.getClientProfile());
         Message messageUpdateList1 = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
-        if(!connections.isEmpty()) {
+        if (!connections.isEmpty()) {
             sendToAllConnections(messageUpdateList1);
         }
         printMsg(usersProfiles.toString());
@@ -156,9 +198,16 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         onSendPackage(connection, fieldInput.getText());
     }
 
-    private ArrayList<Message> sortedForDate (ArrayList<Message> arrayMessages) {
+    private ArrayList<Message> sortedForDate(ArrayList<Message> arrayMessages) {
         Collections.sort(arrayMessages);
         return arrayMessages;
     }
 
+    public static File getFileReservServer() {
+        return fileReservServer;
+    }
+
+    public static ArrayList<Message> getMessages() {
+        return messages;
+    }
 }
