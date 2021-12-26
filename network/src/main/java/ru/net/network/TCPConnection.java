@@ -3,8 +3,6 @@ package ru.net.network;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class TCPConnection{   // Класс, инкапсулирующий в себе логику интернет - соединения
 

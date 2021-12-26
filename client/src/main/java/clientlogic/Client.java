@@ -15,6 +15,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     private static String IP_ADDR;// 192.168.0.104 172.22.34.61- доп. IP // Переменная c IP машины
     private ArrayList<ClientProfile> usersList;
+    private ArrayList<Message> messagesList;
     private boolean correctShutdown;
     org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(Client.class);
 
@@ -71,14 +72,15 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     @Override
     public void onDisconnect(TCPConnection tcpConnection) throws SocketException {
-        if(isCorrectShutdown()) {
+        if (isCorrectShutdown()) {
             System.out.println("Корректное завершение работы.");
             connection.disconnect();
+            System.exit(0);
         }
         System.out.println("Сервер упал.");
-        Platform.runLater(()-> {
-           connection = connect();
-           InformationAlertExample.getInformationConnectionComplete();
+        Platform.runLater(() -> {
+            connection = connect();
+            InformationAlertExample.getInformationConnectionComplete();
         });
     }
 
@@ -103,6 +105,9 @@ public class Client implements TCPConnectionListener { // делаем насл�
                 usersList = (ArrayList<ClientProfile>) msg.getObjT();
                 controller.printListUsers(getUsersList());
                 break;
+            case SERVICE_MESSAGE_UPDATE_DIALOGUES:
+                messagesList = (ArrayList<Message>) msg.getObjT();
+                controller.updateOutput(getMessagesList());
         }
     }
 
@@ -148,5 +153,9 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     public void setCorrectShutdown(boolean correctShutdown) {
         this.correctShutdown = correctShutdown;
+    }
+
+    public ArrayList<Message> getMessagesList() {
+        return messagesList;
     }
 }

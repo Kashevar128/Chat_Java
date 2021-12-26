@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class Message<T, V> implements Serializable, Comparable<Message> {
 
+    private static final long serialVersionUID = 1L;
+
     private TypeMessage typeMessage;
     private ClientProfile profile;
     private String stringValue;
@@ -59,6 +61,10 @@ public class Message<T, V> implements Serializable, Comparable<Message> {
         return obj;
     }
 
+    public V getObj_2() {
+        return obj_2;
+    }
+
     public void setSendAt(Date sendAt) {
         this.sendAt = sendAt;
     }
@@ -80,5 +86,12 @@ public class Message<T, V> implements Serializable, Comparable<Message> {
         if(this.sendingTime - o.sendingTime < 0) return -1;
         if(this.sendingTime - o.sendingTime > 0) return 1;
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "stringValue='" + stringValue + '\'' +
+                '}';
     }
 }

@@ -1,21 +1,14 @@
 package ru.net.server;
 
-import javafx.scene.shape.Path;
 import ru.net.network.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 
 import static ru.net.network.TypeMessage.*;
 
@@ -29,7 +22,8 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final int HEIGHT = 400; // Переменная с высотой окна
     private final ArrayList<TCPConnection> connections = new ArrayList<>(); // Создание коллекцию для создающихся TCP - соединений
     private final ArrayList<ClientProfile> usersProfiles = new ArrayList<>();
-    private final static ArrayList<Message> messages = new ArrayList<>();
+    private static ArrayList<Message> messages = new ArrayList<>();
+    private static ArrayList<Message>oldMessages;
     private final JTextArea textArea = new JTextArea(); // Создаем поле, которое будет отражать диалоги
     private final JTextField fieldNickname = new JTextField("Admin"); // Поле с ником пользователя
     private final JTextField fieldInput = new JTextField(); // Поле для ввода сообщений
@@ -55,11 +49,9 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowClosing(WindowEvent e) {
-                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ChatServer.getFileReservServer()))) {
-                    oos.writeObject(ChatServer.getMessages());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                sortedForDate(messages);
+                oldMessages.addAll(messages);
+                codeReservFile(oldMessages);
             }
 
             @Override
@@ -98,12 +90,17 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         this.serverProfile = new ClientProfile(NAME_SERVER, null);
 
         File file = new File("server/src/main/resources/reserve.txt");
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         fileReservServer = file;
+        if(!fileReservServer.exists()) {
+            try {
+                fileReservServer.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(isFileEmpty(getFileReservServer())) {
+            oldMessages = new ArrayList<>();
+        } else oldMessages = decodeReservFile();
 
         printMsg("Server running..."); // Консоль - запуск сервера
         printMsg("You have to wait connection");
@@ -114,7 +111,6 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         } catch (IOException e) {
             printMsg("Client kicked");
         }
-
     }
 
     private void sendToAllConnections(Message msg) { // Метод для рассылки сообщений всем соединениям сразу
@@ -152,7 +148,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     public synchronized void onDisconnect(TCPConnection tcpConnection) {
         connections.remove(tcpConnection); // Удаление соединения из коллекции соединений
         usersProfiles.remove(tcpConnection.getClientProfile());
-        Message messageUpdateList1 = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+        Message messageUpdateList1 = new Message<>(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
         if (!connections.isEmpty()) {
             sendToAllConnections(messageUpdateList1);
         }
@@ -187,8 +183,13 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                 connection.setClientProfile(clientProfile);
                 usersProfiles.add(connection.getClientProfile());
                 printMsg(usersProfiles.toString());
-                Message messageUpdateList = new Message(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+                sortedForDate(messages);
+                oldMessages.addAll(messages);
+                Message<ArrayList<ClientProfile>, Object> messageUpdateList = new Message<>(usersProfiles, null, SERVICE_MESSAGE_UPDATE_LIST_USERS);
+                Message<ArrayList<Message>, Object> messageUpdateDialogues = new Message<>(oldMessages, null, SERVICE_MESSAGE_UPDATE_DIALOGUES);
                 sendToAllConnections(messageUpdateList);
+                connection.sendMessage(messageUpdateDialogues);
+
                 break;
         }
     }
@@ -198,7 +199,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
         onSendPackage(connection, fieldInput.getText());
     }
 
-    private ArrayList<Message> sortedForDate(ArrayList<Message> arrayMessages) {
+    private static ArrayList<Message> sortedForDate(ArrayList<Message> arrayMessages) {
         Collections.sort(arrayMessages);
         return arrayMessages;
     }
@@ -209,5 +210,33 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
 
     public static ArrayList<Message> getMessages() {
         return messages;
+    }
+
+
+
+    private static void codeReservFile(ArrayList<Message>arrayList) {
+        sortedForDate(arrayList);
+        System.out.println(arrayList);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ChatServer.getFileReservServer()))) {
+            oos.writeObject(arrayList);
+            oos.flush();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static ArrayList<Message> decodeReservFile() {
+        ArrayList<Message> arrayList = null;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ChatServer.getFileReservServer()))) {
+            arrayList = (ArrayList<Message>) ois.readObject();
+            System.out.println("Извлеченный файл\n" + arrayList);
+        }  catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return arrayList;
+    }
+
+    private boolean isFileEmpty(File file) {
+        return file.length() == 0;
     }
 }

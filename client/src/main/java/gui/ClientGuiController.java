@@ -45,20 +45,17 @@ public class ClientGuiController {
     }
 
     private static boolean filter(String msg) {
-        boolean flag = true;
-        if (msg.equals("")) flag = false;
-        for (int i = 0; i < msg.length(); i++) {
-            if (msg.charAt(i) == ' ') flag = false;
-        }
+        boolean flag = !msg.equals("");
         return flag;
     }
-    //TODO: посмотреть, как можно упростить метод.
 
     public void print(Message msg) {
         Platform.runLater(() ->
                 output.getItems().add(new HBoxChat(msg))
         );
     }
+
+
 
     public void printListUsers(ArrayList<ClientProfile> usersList) {
         ArrayList<HBoxChat> hBoxChats = new ArrayList<>();
@@ -72,5 +69,15 @@ public class ClientGuiController {
             listUsers.getItems().addAll(hBoxChats);
         });
 
+    }
+
+    public void updateOutput(ArrayList<Message> msgList) {
+        ArrayList<HBoxChat> hBoxChats = new ArrayList<>();
+        for(Message message : msgList) {
+            hBoxChats.add(new HBoxChat(message));
+        }
+        Platform.runLater(() -> {
+            output.getItems().addAll(hBoxChats);
+        });
     }
 }
