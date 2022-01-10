@@ -1,6 +1,8 @@
 package clientlogic;
 
 import gui.Avatar;
+import gui.WarningAlertExample;
+import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.*;
@@ -74,8 +76,7 @@ public class DataBase implements AuthService {
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery(query_02);
                 while (rs.next()) {
-                    System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " ; " + rs.getString("password") +
-                            " ; " + Arrays.toString(rs.getBytes("avatar")));
+                    System.out.println(rs.getInt("id") + " : " + rs.getString("name") + " ; " + rs.getString("password"));
                 }
             }
         }
@@ -97,6 +98,10 @@ public class DataBase implements AuthService {
     @Override
     public boolean addUser(String name, String pass) throws Exception {
         init();
+        if(auth(name, pass)) {
+            WarningAlertExample.getWarningRepeatUser();
+            return false;
+        }
         try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_01 = "INSERT INTO users (name, password, avatar) VALUES (?,?,?)";
@@ -117,6 +122,7 @@ public class DataBase implements AuthService {
     @Override
     public boolean auth(String name, String pass) throws Exception {
         init();
+        StringUtils.strip(pass);
         try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_02 = "SELECT * FROM users";

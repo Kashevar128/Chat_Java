@@ -99,6 +99,7 @@ public class Client implements TCPConnectionListener { // делаем насл�
     public void messageHandler(Message msg, TypeMessage typeMessage) {
         switch (typeMessage) {
             case VERBAL_MESSAGE:
+                inOrOutSorter(msg);
                 controller.print(msg);
                 break;
             case SERVICE_MESSAGE_UPDATE_LIST_USERS:
@@ -107,6 +108,9 @@ public class Client implements TCPConnectionListener { // делаем насл�
                 break;
             case SERVICE_MESSAGE_UPDATE_DIALOGUES:
                 messagesList = (ArrayList<Message>) msg.getObjT();
+                for (Message message : messagesList) {
+                    inOrOutSorter(message);
+                }
                 controller.updateOutput(getMessagesList());
         }
     }
@@ -125,6 +129,12 @@ public class Client implements TCPConnectionListener { // делаем насл�
 
     public ClientGui getClientGui() {
         return clientGui;
+    }
+
+    private void inOrOutSorter(Message msg) {
+        if (msg.getProfile().getNameUser().equals(getLoginUser())) {
+            msg.setInOrOut(false);
+        } else msg.setInOrOut(true);
     }
 
     private TCPConnection connect() {

@@ -26,5 +26,10 @@ public class AuthGui extends Application {
                 e.printStackTrace();
             }
         }).start();
+
+        primaryStage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
+
     }
 }

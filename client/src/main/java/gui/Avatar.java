@@ -12,11 +12,6 @@ import java.math.BigInteger;
 import java.util.Base64;
 import java.util.Random;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import ru.net.network.Message;
-
 public class Avatar {
 
     public static final String BASE64_PREFIX = "data:image/png;base64,";

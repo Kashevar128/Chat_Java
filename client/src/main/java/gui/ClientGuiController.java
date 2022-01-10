@@ -7,6 +7,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import clientlogic.Client;
 
@@ -14,6 +15,8 @@ import clientlogic.Client;
 import ru.net.network.ClientProfile;
 import ru.net.network.Message;
 
+import java.awt.event.KeyEvent;
+import java.beans.EventHandler;
 import java.util.ArrayList;
 
 public class ClientGuiController {
@@ -26,6 +29,7 @@ public class ClientGuiController {
     public ImageView yourAvatar;
 
     private Client client;
+
 
     public void setClient(Client client) {
         this.client = client;
@@ -60,7 +64,7 @@ public class ClientGuiController {
     public void printListUsers(ArrayList<ClientProfile> usersList) {
         ArrayList<HBoxChat> hBoxChats = new ArrayList<>();
         for (ClientProfile userProfile : usersList) {
-            if(!userProfile.equals(client.getMyClientProfile())) {
+            if(!userProfile.getNameUser().equals(client.getLoginUser())) {
                 hBoxChats.add(new HBoxChat(userProfile));
             }
         }
@@ -77,6 +81,7 @@ public class ClientGuiController {
             hBoxChats.add(new HBoxChat(message));
         }
         Platform.runLater(() -> {
+            output.getItems().clear();
             output.getItems().addAll(hBoxChats);
         });
     }

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ru.net.network.TCPConnectionListener;
@@ -27,6 +28,11 @@ public class ClientGui {
         controller = loader.getController();
         nameUser = name;
         this.avatar = avatar;
+        controller.input.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                controller.msgProcessing();
+            }
+        });
 
         stage = new Stage();
         stage.setTitle("Сетевой чат");
@@ -59,5 +65,9 @@ public class ClientGui {
 
     public byte[] getAvatar() {
         return avatar;
+    }
+
+    public Client getClient() {
+        return client;
     }
 }

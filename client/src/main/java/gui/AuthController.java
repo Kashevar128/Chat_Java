@@ -3,6 +3,7 @@ package gui;
 import clientlogic.DataBase;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.StringUtils;
 
 public class AuthController {
 
@@ -22,8 +23,9 @@ public class AuthController {
                 }
             });
         } else {
-            login.setText("WRONG LOGIN OR PASSWORD");
+            login.clear();
             password.clear();
+            WarningAlertExample.getWarningLoginOrPasswordFalse();
         }
     }
 
