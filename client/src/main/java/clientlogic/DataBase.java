@@ -122,7 +122,6 @@ public class DataBase implements AuthService {
     @Override
     public boolean auth(String name, String pass) throws Exception {
         init();
-        StringUtils.strip(pass);
         try (Connection connection = getConnection()) {
             @Language("SQL")
             String query_02 = "SELECT * FROM users";

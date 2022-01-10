@@ -19,4 +19,13 @@ public class WarningAlertExample {
 
         alert.showAndWait();
     }
+
+    public static void getWarningBigLenght() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText("Длина логина и пароля не должна превышать 30 символов");
+        alert.setContentText("Нажмите ОК для продолжения.");
+
+        alert.showAndWait();
+    }
+
 }

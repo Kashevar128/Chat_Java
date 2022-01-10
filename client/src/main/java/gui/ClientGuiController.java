@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import clientlogic.Client;
 
 
+import org.apache.commons.lang3.StringUtils;
 import ru.net.network.ClientProfile;
 import ru.net.network.Message;
 
@@ -40,15 +41,16 @@ public class ClientGuiController {
     }
 
     public void msgProcessing() {
-        String msg = input.getText();
+        String msg = StringUtils.strip(input.getText());
         if (!filter(msg)) {
+            input.clear();
             return;
         }
         input.clear();
         getClient().onSendPackage(client.getConnection(), msg + "\uD83D\uDE00");
     }
 
-    private static boolean filter(String msg) {
+    public static boolean filter(String msg) {
         boolean flag = !msg.equals("");
         return flag;
     }
