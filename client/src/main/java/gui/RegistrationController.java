@@ -33,10 +33,10 @@ public class RegistrationController {
             return;
         }
 
-        boolean reg = DataBase.getInstance().addUser(login.getText(), password.getText());
+        boolean reg = DataBase.getInstance().addUser(getStrLogin(), getStrPassword());
         if (reg) {
             login.getScene().getWindow().hide();
-            new ClientGui(login.getText(), DataBase.getAvatar(login.getText()));
+            new ClientGui(getStrLogin(), DataBase.getAvatar(getStrLogin()));
             DataBase.resultSet();
         }
     }

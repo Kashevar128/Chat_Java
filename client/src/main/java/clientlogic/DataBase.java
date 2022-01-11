@@ -1,6 +1,7 @@
 package clientlogic;
 
 import gui.Avatar;
+import gui.InformationAlertExample;
 import gui.WarningAlertExample;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
@@ -111,6 +112,7 @@ public class DataBase implements AuthService {
                 statement.setBytes(3,Avatar.createAvatar(name));
                 statement.executeUpdate();
                 logger.info("Операция добавления нового пользователя прошла успешно.");
+                InformationAlertExample.getInformationRegistrationComplete(name);
                 return true;
             } catch (SQLException e) {
                 logger.error("SQLException error", e);
@@ -130,6 +132,7 @@ public class DataBase implements AuthService {
                 while (rs.next()) {
                     if (rs.getString("name").equals(name) && rs.getString("password").equals(pass)) {
                         logger.info("Пользователь опознан.");
+                        InformationAlertExample.getInformationAuthComplete(name);
                         return true;
                     }
                 }

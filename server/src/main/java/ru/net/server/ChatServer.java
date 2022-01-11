@@ -31,6 +31,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
     private static final String NAME_SERVER = "Admin";
     private ClientProfile serverProfile;
     private static File fileReservServer;
+    private Thread saveThread;
 
     private ChatServer() { // Конструктор класса
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Функция для закрытия окна при нажатии на крестик
@@ -51,6 +52,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
             public void windowClosing(WindowEvent e) {
                 sortedForDate(getMessages());
                 codeReservFile(getMessages());
+                saveThread.interrupt();
             }
 
             @Override
@@ -62,6 +64,7 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
             public void windowClosed(WindowEvent e) {
                 sortedForDate(getMessages());
                 codeReservFile(getMessages());
+                saveThread.interrupt();
             }
 
             @Override
@@ -102,10 +105,10 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
             setMessages(new ArrayList<>());
         } else setMessages(decodeReservFile());
 
-        new Thread(() -> {
+        saveThread = new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(600000);
+                    Thread.sleep(30000);
                     if(!getMessages().isEmpty()) {
                         sortedForDate(getMessages());
                         codeReservFile(getMessages());
@@ -114,7 +117,9 @@ public class ChatServer extends JFrame implements TCPConnectionListener, ActionL
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        saveThread.start();
+
 
         printMsg("Server running..."); // Консоль - запуск сервера
         printMsg("You have to wait connection");
